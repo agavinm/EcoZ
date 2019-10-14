@@ -11,6 +11,9 @@ sudo systemctl enable docker
 sudo docker build -t sisinfo-apache2 .
 sudo docker run -dit --name sisinfo-webapp -p 8080:80 sisinfo-apache2
 
+# Rearranca el servidor siempre a menos que se pare manualmente
+sudo docker update --restart=unless-stopped sisinfo-webapp
+
 # Muestra los procesos de docker
 # sudo docker ps
 
