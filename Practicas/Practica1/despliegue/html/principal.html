@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Practica1</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Dark.css">
+    <link rel="stylesheet" href="assets/css/Registration-Form-with-Photo.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body style="background-repeat: no-repeat;">
+    <nav class="navbar navbar-light navbar-expand-lg bg-white page-navbar" style="background-repeat: no-repeat;background-position: 200% 0%;">
+        <div class="container"><a class="navbar-brand" href="#" style="filter: blur(0px);color: #d80505;">Calculadora de rutas limpias</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div
+                class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item item" role="presentation"><a class="nav-link active" href="perfil.html" style="color: #d80505;">Perfil</a></li>
+                    <li class="nav-item item" role="presentation"><a class="nav-link" href="ayuda.html" style="color: #d80505;">Ayuda</a></li>
+                    <li class="nav-item item" role="presentation"><a class="nav-link" href="index.html" style="color: #d80505;">Salir</a></li>
+                </ul>
+        </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="map-example">
+            <div class="row" style="height: 700px;">
+                <div class="col-lg-6 col-lg-7">
+                    <h2 style="color: #d80505;">Selecciona un origen y destino</h2><iframe class="border rounded-0 d-xl-flex" allowfullscreen="" frameborder="0" width="100%" height="80%" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD6fPrIUxkxHuMYUiXOe4IMoExDCLcpGKI&amp;q=Zaragoza&amp;zoom=10"
+                        style="padding-bottom: 10px;"></iframe>
+                    <div class="btn-group" role="group"><button class="btn btn-primary" type="button" style="background-color: #d80505;">Calcular</button><button class="btn btn-primary" type="button" style="background-color: #d80505;margin-left: 5px;">Reiniciar</button></div>
+                </div>
+                <div class="col">
+                    <h2 style="color: #d80505;">Rutas disponibles:</h2><a href="#" style="color: #d80505;">Consultar historial de rutas</a>
+                    <div style="background-color: #e4e1e1;">
+                        <h3 style="color: #d80505;">Ruta 1</h3>
+                        <div class="row">
+                            <div class="col col-7">
+                                <p style="color: #d80505;">Distancia total:<br>30000km</p>
+                                <p style="color: #d80505;">Tiempo de recorrido:<br>20m</p>
+                            </div>
+                            <div class="col">
+                                <h3 class="text-center" style="color: #d80505;">54%</h3>
+                                <p class="text-center" style="color: #d80505;">Contaminación</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col"><button class="btn btn-primary d-xl-flex" type="button" style="margin: auto;background-color: #d80505;">Guardar</button></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div style="background-color: #e4e1e1;">
+                        <h3 style="color: #d80505;">Ruta 2</h3>
+                        <div class="row">
+                            <div class="col col-7">
+                                <p style="color: #d80505;">Distancia total:<br>30km</p>
+                                <p style="color: #d80505;">Tiempo de recorrido:<br>2h 1m</p>
+                            </div>
+                            <div class="col">
+                                <h3 class="text-center" style="color: #d80505;">33%</h3>
+                                <p class="text-center" style="color: #d80505;">Contaminación</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col"><button class="btn btn-primary d-xl-flex" type="button" style="margin: auto;background-color: #d80505;">Guardar</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
