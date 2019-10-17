@@ -29,6 +29,7 @@ sudo docker run --restart=unless-stopped -d --name sisinf-tomcat \
 
 sleep 5
 # Copiamos los ficheros de configuración en la carpeta compartida
+sudo mkdir $PORTAL_PATH/tomcat/tomcat/conf
 sudo cp tomcat/context.xml $PORTAL_PATH/tomcat/tomcat/conf
 sudo cp tomcat/server.xml $PORTAL_PATH/tomcat/tomcat/conf
 sudo cp tomcat/tomcat-users.xml $PORTAL_PATH/tomcat/tomcat/conf
