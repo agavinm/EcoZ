@@ -1,23 +1,24 @@
-CREATE TABLE Usuario
+CREATE SCHEMA IF NOT EXISTS ecoz;
+
+CREATE TABLE IF NOT EXISTS ecoz.Usuario
 (
-   Email             VARCHAR(20)     PRIMARY KEY,
-   Nombre            VARCHAR(20),
-   Apellidos         VARCHAR(20),
-   FechaNacimiento   DATE,
-   Contraseña        VARCHAR(10)     NOT NULL
+   Email             CHAR(20)     PRIMARY KEY,
+   Nombre            CHAR(20),
+   Apellidos         CHAR(20),
+   Contrasena        CHAR(10)     NOT NULL
 );
 
-CREATE TABLE Ruta
+CREATE TABLE IF NOT EXISTS ecoz.Ruta
 (
-   Id              NUMBER 	   PRIMARY KEY,
-   Fichero         BYTEA           NOT NULL,
-   Usuario_Email   VARCHAR(20)     NOT NULL,
-   FOREIGN KEY (Usuario_Email) REFERENCES Usuario(Email)
+   Id              INTEGER     PRIMARY KEY,
+   Fichero         BYTEA          NOT NULL,
+   Usuario_Email   CHAR(20)       NOT NULL,
+   FOREIGN KEY (Usuario_Email) REFERENCES ecoz.Usuario(Email)
 );
 
-CREATE TABLE Zona
+CREATE TABLE IF NOT EXISTS ecoz.Zona
 (
-   Nombre    VARCHAR(20)     PRIMARY KEY,
+   Nombre    CHAR(20)     PRIMARY KEY,
    Fichero   BYTEA           NOT NULL,
    CO2       FLOAT           NOT NULL,
    O3        FLOAT           NOT NULL,
@@ -25,12 +26,12 @@ CREATE TABLE Zona
    PM10      FLOAT           NOT NULL
 );
 
-CREATE TABLE Discurre
+CREATE TABLE IF NOT EXISTS ecoz.Discurre
 (
-   Ruta_Id       NUMBER,
-   Zona_Nombre   VARCHAR(20),
-   PRIMARY KEY (Ruta_Id,Zona_Nombre),
-   FOREIGN KEY (Ruta_Id) REFERENCES Ruta(Id),
-   FOREIGN KEY (Zona_Nombre) REFERENCES Zona(Nombre)
+   Ruta_Id        INTEGER    NOT NULL,
+   Zona_Nombre   CHAR(20)    NOT NULL,
+   PRIMARY KEY (Ruta_Id, Zona_Nombre),
+   FOREIGN KEY (Ruta_Id) REFERENCES ecoz.Ruta(Id),
+   FOREIGN KEY (Zona_Nombre) REFERENCES ecoz.Zona(Nombre)
 );
 
