@@ -11,9 +11,26 @@ package ecoz;
 
 import java.sql.*;
 
-public abstract class DBConnect { // Capa DAO
+abstract class DBConnect { // Capa DAO
+	protected Connection con;
+
+	protected DBConnect() {
+		try {
+			this.con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sisinf", "sisinf", "sisinf");
+		}
+		catch(SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+	}
 	
-	public static Connection createConnection() throws SQLException {
-		return DriverManager.getConnection("jdbc:postgresql://localhost:5432/sisinf", "sisinf", "sisinf");
+	protected void finalize() {
+		if (this.con != null) {
+			try {
+				this.con.close();
+			}
+			catch(SQLException e) {
+				System.out.println("ERROR: " + e.getMessage());
+			}
+		}
 	}
 }
