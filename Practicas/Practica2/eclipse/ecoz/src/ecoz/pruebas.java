@@ -1,12 +1,17 @@
 package ecoz;
 
+import de.micromata.opengis.kml.v_2_2_0.Kml;
+
 public class pruebas {
 	
 	public static void main(String[] args) {
-		usuarioRepository u = new usuarioRepository();
+		//usuarioRepository u = new usuarioRepository();
+		zonaRepository z = new zonaRepository();
 		
-		System.out.println(u.crearUsuario("bbb@aaa.aaa", "aaaa"));
+		//System.out.println(u.crearUsuario("bbb@aaa.aaa", "aaaa"));
+		System.out.println(z.crearZona("zona2", new Kml(), 0.0f, 0.0f, 0.0f, 0.0f));
 		
-		u.finalize();
+		//u.finalize();
+		z.finalize();
 	}
 }
