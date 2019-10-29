@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS ecoz.Ruta
    Id              INTEGER     PRIMARY KEY,
    Fichero         BYTEA          NOT NULL,
    Usuario_Email   CHAR(20)       NOT NULL,
-   FOREIGN KEY (Usuario_Email) REFERENCES ecoz.Usuario(Email)
+   FOREIGN KEY (Usuario_Email) REFERENCES ecoz.Usuario(Email) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ecoz.Zona
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS ecoz.Discurre
    Ruta_Id        INTEGER    NOT NULL,
    Zona_Nombre   CHAR(20)    NOT NULL,
    PRIMARY KEY (Ruta_Id, Zona_Nombre),
-   FOREIGN KEY (Ruta_Id) REFERENCES ecoz.Ruta(Id),
-   FOREIGN KEY (Zona_Nombre) REFERENCES ecoz.Zona(Nombre)
+   FOREIGN KEY (Ruta_Id) REFERENCES ecoz.Ruta(Id) ON DELETE CASCADE,
+   FOREIGN KEY (Zona_Nombre) REFERENCES ecoz.Zona(Nombre) ON DELETE CASCADE
 );
 
