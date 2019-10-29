@@ -22,6 +22,9 @@ import org.apache.commons.io.FileUtils;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 
 public class zonaRepository extends DBConnect {
+	
+	private final String EX_ZONA_NO_CREADA = "Error: No se ha podido crear la zona";
+	
 	private final String SQL_CREAR = "INSERT INTO ecoz.zona(nombre, fichero, co2, o3, no2, pm10) VALUES(?,?,?,?,?,?)";
 	
 	private final String SQL_UPDATE_CO2 = "UPDATE ecoz.zona SET co2=? WHERE nombre=?";
@@ -38,6 +41,34 @@ public class zonaRepository extends DBConnect {
 	
 	private final String SQL_DELETE = "DELETE FROM ecoz.zona WHERE nombre=?";
 	
+	private final String SQL_EXISTS_PK = "SELECT COUNT(*) FROM ecoz.zona WHERE nombre=?";
+	
+	/**
+	 * 
+	 * La función existeEntrada comprueba si existe una entrada en la tabla zona de la
+	 * base de datos con la clave primaria indicada
+	 * 
+	 * @param nombre
+	 * @return true si existe, false en caso contrario
+	 */
+	private Boolean existeEntrada(String nombre) throws Exception {
+		try (PreparedStatement pstmt = con.prepareStatement(SQL_EXISTS_PK, Statement.RETURN_GENERATED_KEYS)) {
+			pstmt.setString(1, nombre);
+			
+			ResultSet rs = pstmt.executeQuery();
+			// Extraer el resultado
+			rs.next();
+			if (rs.getInt(1) == 1) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		} catch (SQLException e) {
+			throw new Exception(EX_CONEXION); 
+		}
+	}
+	
 	/**
 	 * 
 	 * La función crearZona añade en la tabla zona de la base de datos una nueva entrada
@@ -49,51 +80,52 @@ public class zonaRepository extends DBConnect {
 	 * @param o3
 	 * @param no2
 	 * @param pm10
-	 * @return 0 si se ha podido crear, 1 si falla la conexión con la base de datos
-	 * 2 si se produce una excepción
 	 */
-	public Integer crearZona(String nombre, Kml fichero, Float co2, Float o3, Float no2, Float pm10) {
-		if (con == null) {
-			return 1;
-		}
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_CREAR, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-		
-			// Agregar el fichero kml de la zona a la consulta
-			// Primero hay que volcar el contenido del fichero kml a un txt
-			// Debido a la implementación de la librería externa usada, se genera un txt en la carpeta del proyecto
-			int x = (int) ((Math.random()*((100-999)+1))+100);
-			String fileName = "tmp-" + x + ".txt";
-			try {
-				fichero.marshal(new File(fileName));
-			} catch (FileNotFoundException e) {
-				return 2;
-			}
-			// Se vuelve a abrir el txt generado
-			File file = new File(fileName);
-			InputStream is = null;
-			try {
-				is = (InputStream) new FileInputStream(file);
-			} catch (FileNotFoundException e2) {
-				return 2;
-			}
-			pstmt.setBinaryStream(2, is, (int) file.length());
-			// Se borra el txt generado
-			file.delete();
+	public void crearZona(String nombre, Kml fichero, Float co2, Float o3, Float no2, Float pm10) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (!existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_CREAR, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
 			
-			// Agregar a la consulta los distintos niveles de gases
-			pstmt.setFloat(3, co2);
-			pstmt.setFloat(4, o3);
-			pstmt.setFloat(5, no2);
-			pstmt.setFloat(6, pm10);
-			
-			pstmt.executeUpdate();
-			return 0;
+				// Agregar el fichero kml de la zona a la consulta
+				// Primero hay que volcar el contenido del fichero kml a un txt
+				// Debido a la implementación de la librería externa usada, se genera un txt en la carpeta del proyecto
+				int x = (int) ((Math.random()*((100-999)+1))+100);
+				String fileName = "tmp-" + x + ".txt";
+				try {
+					fichero.marshal(new File(fileName));
+				} 
+				catch (FileNotFoundException e) {
+					throw new Exception(EX_RUTA);
+				}
+				// Se vuelve a abrir el txt generado
+				File file = new File(fileName);
+				InputStream is = null;
+				try {
+					is = (InputStream) new FileInputStream(file);
+				} 
+				catch (FileNotFoundException e2) {
+					throw new Exception(EX_RUTA);
+				}
+				pstmt.setBinaryStream(2, is, (int) file.length());
+				// Se borra el txt generado
+				file.delete();
+				
+				// Agregar a la consulta los distintos niveles de gases
+				pstmt.setFloat(3, co2);
+				pstmt.setFloat(4, o3);
+				pstmt.setFloat(5, no2);
+				pstmt.setFloat(6, pm10);
+				
+				pstmt.executeUpdate();
+			}
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION); 
+			}
 		}
-		catch (SQLException ex) {
-			return 2;
+		else {
+			throw new Exception(EX_ZONA_NO_CREADA);
 		}
 	}
 	
@@ -105,12 +137,11 @@ public class zonaRepository extends DBConnect {
 	 * @param nombre
 	 * @param co2
 	 * @return 0 si se ha podido actualizar, 1 si falla la conexión con la base de datos,
-	 * 2 si se produce una excepción
+	 * 2 si se produce una excepción, 3 si no existe una entrada en la base de datos con
+	 * la clave indicada
 	 */
-	public Integer actualizarCO2(String nombre, Float co2) {
-		if (con == null) {
-			return 1;
-		}
+	public void actualizarCO2(String nombre, Float co2) {
+		
 		
 		try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_CO2, Statement.RETURN_GENERATED_KEYS)) {
 			// Agregar el nombre de la zona a la consulta
@@ -138,8 +169,10 @@ public class zonaRepository extends DBConnect {
 	 * 2 si se produce una excepción
 	 */
 	public Integer actualizarO3(String nombre, Float o3) {
-		if (con == null) {
-			return 1;
+		// Comprobar si existe una entrada con la clave primaria indicada
+		int cd = existeEntrada(nombre);
+		if (cd != 0) {
+			return cd;
 		}
 		
 		try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_O3, Statement.RETURN_GENERATED_KEYS)) {
