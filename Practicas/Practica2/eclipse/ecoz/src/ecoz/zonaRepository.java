@@ -22,8 +22,9 @@ import org.apache.commons.io.FileUtils;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 
 public class zonaRepository extends DBConnect {
-	
-	private final String EX_ZONA_NO_CREADA = "Error: No se ha podido crear la zona";
+
+	private final String EX_ZONA_NO_CREADA = "Error: Ya existe una zona con ese nombre";
+	private final String EX_ZONA_NO_EXISTENTE = "Error: No existe una zona con ese nombre";
 	
 	private final String SQL_CREAR = "INSERT INTO ecoz.zona(nombre, fichero, co2, o3, no2, pm10) VALUES(?,?,?,?,?,?)";
 	
@@ -44,12 +45,22 @@ public class zonaRepository extends DBConnect {
 	private final String SQL_EXISTS_PK = "SELECT COUNT(*) FROM ecoz.zona WHERE nombre=?";
 	
 	/**
+	 * Constructor por defecto
+	 * 
+	 * @throws Exception
+	 */
+	protected zonaRepository() throws Exception {
+		super();
+	}
+	
+	/**
 	 * 
 	 * La función existeEntrada comprueba si existe una entrada en la tabla zona de la
 	 * base de datos con la clave primaria indicada
 	 * 
 	 * @param nombre
 	 * @return true si existe, false en caso contrario
+	 * @throws Exception
 	 */
 	private Boolean existeEntrada(String nombre) throws Exception {
 		try (PreparedStatement pstmt = con.prepareStatement(SQL_EXISTS_PK, Statement.RETURN_GENERATED_KEYS)) {
@@ -80,6 +91,7 @@ public class zonaRepository extends DBConnect {
 	 * @param o3
 	 * @param no2
 	 * @param pm10
+	 * @throws Exception
 	 */
 	public void crearZona(String nombre, Kml fichero, Float co2, Float o3, Float no2, Float pm10) throws Exception {
 		// Comprobar si existe una entrada con la clave primaria indicada
@@ -136,25 +148,26 @@ public class zonaRepository extends DBConnect {
 	 * 
 	 * @param nombre
 	 * @param co2
-	 * @return 0 si se ha podido actualizar, 1 si falla la conexión con la base de datos,
-	 * 2 si se produce una excepción, 3 si no existe una entrada en la base de datos con
-	 * la clave indicada
+	 * @throws Exception
 	 */
-	public void actualizarCO2(String nombre, Float co2) {
-		
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_CO2, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-			
-			// Agregar a la consulta nivel de CO2
-			pstmt.setFloat(2, co2);
-			
-			pstmt.executeUpdate();
-			return 0;
+	public void actualizarCO2(String nombre, Float co2) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_CO2, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				// Agregar a la consulta nivel de CO2
+				pstmt.setFloat(2, co2);
+				
+				pstmt.executeUpdate();
+			}
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION);
+			}
 		}
-		catch (SQLException ex) {
-			return 2;
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 	}
 	
@@ -165,28 +178,26 @@ public class zonaRepository extends DBConnect {
 	 * 
 	 * @param nombre
 	 * @param o3
-	 * @return 0 si se ha podido actualizar, 1 si falla la conexión con la base de datos,
-	 * 2 si se produce una excepción
+	 * @throws Exception
 	 */
-	public Integer actualizarO3(String nombre, Float o3) {
+	public void actualizarO3(String nombre, Float o3) throws Exception {
 		// Comprobar si existe una entrada con la clave primaria indicada
-		int cd = existeEntrada(nombre);
-		if (cd != 0) {
-			return cd;
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_O3, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				// Agregar a la consulta nivel de O3
+				pstmt.setFloat(2, o3);
+				
+				pstmt.executeUpdate();
+			}
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION);
+			}
 		}
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_O3, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-			
-			// Agregar a la consulta nivel de O3
-			pstmt.setFloat(2, o3);
-			
-			pstmt.executeUpdate();
-			return 0;
-		}
-		catch (SQLException ex) {
-			return 2;
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 	}
 	
@@ -197,26 +208,26 @@ public class zonaRepository extends DBConnect {
 	 * 
 	 * @param nombre
 	 * @param no2
-	 * @return 0 si se ha podido actualizar, 1 si falla la conexión con la base de datos,
-	 * 2 si se produce una excepción
+	 * @throws Exception
 	 */
-	public Integer actualizarNO2(String nombre, Float no2) {
-		if (con == null) {
-			return 1;
+	public void actualizarNO2(String nombre, Float no2) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_NO2, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				// Agregar a la consulta nivel de NO2
+				pstmt.setFloat(2, no2);
+				
+				pstmt.executeUpdate();
+			}
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION);
+			}
 		}
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_NO2, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-			
-			// Agregar a la consulta nivel de NO2
-			pstmt.setFloat(2, no2);
-			
-			pstmt.executeUpdate();
-			return 0;
-		}
-		catch (SQLException ex) {
-			return 2;
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 	}
 	
@@ -227,27 +238,28 @@ public class zonaRepository extends DBConnect {
 	 * 
 	 * @param nombre
 	 * @param pm10
-	 * @return 0 si se ha podido actualizar, 1 si falla la conexión con la base de datos,
-	 * 2 si se produce una excepción
+	 * @throws Exception
 	 */
-	public Integer actualizarPM10(String nombre, Float pm10) {
-		if (con == null) {
-			return 1;
+	public void actualizarPM10(String nombre, Float pm10) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_PM10, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				// Agregar a la consulta nivel de PM10
+				pstmt.setFloat(2, pm10);
+				
+				pstmt.executeUpdate();
+			}
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION);
+			}
+		}
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_PM10, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-			
-			// Agregar a la consulta nivel de PM10
-			pstmt.setFloat(2, pm10);
-			
-			pstmt.executeUpdate();
-			return 0;
-		}
-		catch (SQLException ex) {
-			return 2;
-		}
 	}
 	
 	/**
@@ -257,45 +269,50 @@ public class zonaRepository extends DBConnect {
 	 * 
 	 * @param nombre
 	 * @param fichero
-	 * @return 0 si se ha podido actualizar, 1 si falla la conexión con la base de datos,
-	 * 2 si se produce una excepción
+	 * @throws Exception
 	 */
-	public Integer actualizarFichero(String nombre, Kml fichero) {
-		if (con == null) {
-			return 1;
-		}
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_FILE, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-			
-			// Agregar el fichero kml de la zona a la consulta
-			// Primero hay que volcar el contenido del fichero kml a un txt
-			// Debido a la implementación de la librería externa usada, se genera un txt en la carpeta del proyecto
-			int x = (int) ((Math.random()*((100-999)+1))+100);
-			String fileName = "tmp-" + x + ".txt";
-			try {
-				fichero.marshal(new File(fileName));
-			} catch (FileNotFoundException e) {
-				return 2;
+	public void actualizarFichero(String nombre, Kml fichero) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_FILE, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				// Agregar el fichero kml de la zona a la consulta
+				// Primero hay que volcar el contenido del fichero kml a un txt
+				// Debido a la implementación de la librería externa usada, se genera un txt en la carpeta del proyecto
+				int x = (int) ((Math.random()*((100-999)+1))+100);
+				String fileName = "tmp-" + x + ".txt";
+				try {
+					fichero.marshal(new File(fileName));
+				} 
+				catch (FileNotFoundException e) {
+					throw new Exception(EX_RUTA);
+				}
+				
+				// Se vuelve a abrir el txt generado
+				File file = new File(fileName);
+				InputStream is = null;
+				try {
+					is = (InputStream) new FileInputStream(file);
+				} 
+				catch (FileNotFoundException e2) {
+					throw new Exception(EX_RUTA);
+				}
+				
+				pstmt.setBinaryStream(2, is, (int) file.length());
+				// Se borra el txt generado
+				file.delete();
+				
+				pstmt.executeUpdate();
+				
 			}
-			// Se vuelve a abrir el txt generado
-			File file = new File(fileName);
-			InputStream is = null;
-			try {
-				is = (InputStream) new FileInputStream(file);
-			} catch (FileNotFoundException e2) {
-				return 2;
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION);
 			}
-			pstmt.setBinaryStream(2, is, (int) file.length());
-			// Se borra el txt generado
-			file.delete();
-			
-			pstmt.executeUpdate();
-			return 0;
 		}
-		catch (SQLException ex) {
-			return 2;
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 	}
 	
@@ -305,30 +322,26 @@ public class zonaRepository extends DBConnect {
 	 * de la base de datos cuya clave primaria es el nombre de la zona indicado
 	 * 
 	 * @param nombre
-	 * @return El nivel de CO2 para la entrada de la tabla si existe, 1 si falla la conexión
-	 * con la base de datos, 2 si se produce una excepción, 3 si no existe una entrada con
-	 * la clave primaria indicada en la base de datos
+	 * @throws Exception
 	 */
-	public String seleccionarCO2(String nombre) {
-		if (con == null) {
-			return "1";
-		}
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_CO2, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-			
-			ResultSet rs = pstmt.executeQuery();
-			// Extraer el resultado
-			if (rs.next()) {
-				return rs.getString(1);
+	public Float seleccionarCO2(String nombre) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_CO2, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				ResultSet rs = pstmt.executeQuery();
+				// Extraer el resultado
+				rs.next();
+				return Float.parseFloat(rs.getString(1));
 			}
-			else {
-				return "3";
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION);
 			}
 		}
-		catch (SQLException ex) {
-			return "2";
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 	}
 	
@@ -338,30 +351,26 @@ public class zonaRepository extends DBConnect {
 	 * de la base de datos cuya clave primaria es el nombre de la zona indicado
 	 * 
 	 * @param nombre
-	 * @return El nivel de O3 para la entrada de la tabla si existe, 1 si falla la conexión
-	 * con la base de datos, 2 si se produce una excepción, 3 si no existe una entrada con
-	 * la clave primaria indicada en la base de datos
+	 * @throws Exception
 	 */
-	public String seleccionarO3(String nombre) {
-		if (con == null) {
-			return "1";
-		}
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_O3, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-			
-			ResultSet rs = pstmt.executeQuery();
-			// Extraer el resultado
-			if (rs.next()) {
-				return rs.getString(1);
+	public Float seleccionarO3(String nombre) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_O3, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				ResultSet rs = pstmt.executeQuery();
+				// Extraer el resultado
+				rs.next();
+				return Float.parseFloat(rs.getString(1));
 			}
-			else {
-				return "3";
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION);
 			}
 		}
-		catch (SQLException ex) {
-			return "2";
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 	}
 	
@@ -371,30 +380,26 @@ public class zonaRepository extends DBConnect {
 	 * de la base de datos cuya clave primaria es el nombre de la zona indicado
 	 * 
 	 * @param nombre
-	 * @return El nivel de NO2 para la entrada de la tabla si existe, 1 si falla la conexión
-	 * con la base de datos, 2 si se produce una excepción, 3 si no existe una entrada con
-	 * la clave primaria indicada en la base de datos
+	 * @throws Exception
 	 */
-	public String seleccionarNO2(String nombre) {
-		if (con == null) {
-			return "1";
-		}
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_NO2, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-			
-			ResultSet rs = pstmt.executeQuery();
-			// Extraer el resultado
-			if (rs.next()) {
-				return rs.getString(1);
+	public Float seleccionarNO2(String nombre) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_NO2, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				ResultSet rs = pstmt.executeQuery();
+				// Extraer el resultado
+				rs.next();
+				return Float.parseFloat(rs.getString(1));
 			}
-			else {
-				return "3";
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION);
 			}
 		}
-		catch (SQLException ex) {
-			return "2";
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 	}
 	
@@ -404,30 +409,26 @@ public class zonaRepository extends DBConnect {
 	 * de la base de datos cuya clave primaria es el nombre de la zona indicado
 	 * 
 	 * @param nombre
-	 * @return El nivel de PM10 para la entrada de la tabla si existe, 1 si falla la conexión
-	 * con la base de datos, 2 si se produce una excepción, 3 si no existe una entrada con
-	 * la clave primaria indicada en la base de datos
+	 * @throws Exception
 	 */
-	public String seleccionarPM10(String nombre) {
-		if (con == null) {
-			return "1";
-		}
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_PM10, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-			
-			ResultSet rs = pstmt.executeQuery();
-			// Extraer el resultado
-			if (rs.next()) {
-				return rs.getString(1);
+	public Float seleccionarPM10(String nombre) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_PM10, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				ResultSet rs = pstmt.executeQuery();
+				// Extraer el resultado
+				rs.next();
+				return Float.parseFloat(rs.getString(1));
 			}
-			else {
-				return "3";
+			catch (SQLException ex) {
+				throw new Exception(EX_CONEXION);
 			}
 		}
-		catch (SQLException ex) {
-			return "2";
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 	}
 	
@@ -437,41 +438,62 @@ public class zonaRepository extends DBConnect {
 	 * de la base de datos cuya clave primaria es el nombre de la zona indicado
 	 * 
 	 * @param nombre
-	 * @return SimpleEntry con clave 1 indica que falla la conexión con la base de datos,
-	 * SimpleEntry con clave 2 indica que se produce una excepción, SimpleEntry con calve 3
-	 * indica que no existe una entrada con la clave primaria indicada en la base de datos,
-	 * SimpleEntry con calve 0 indica que se puede obtener el fichero kml y como valor el
-	 * el propio fichero, en los casos anterior valor vale null
+	 * @throws Exception
 	 */
-	public SimpleEntry seleccionarFichero(String nombre) {
-		if (con == null) {
-			return new SimpleEntry(1, null);
-		}
-		
-		try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_FILE, Statement.RETURN_GENERATED_KEYS)) {
-			// Agregar el nombre de la zona a la consulta
-			pstmt.setString(1, nombre);
-						
-			ResultSet rs = pstmt.executeQuery();
-			// Extraer el resultado
-			if (rs.next()) {
+	public Kml seleccionarFichero(String nombre) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_SELECT_FILE, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+							
+				ResultSet rs = pstmt.executeQuery();
+				// Extraer el resultado
+				rs.next();
 				String content = rs.getString(1);
 				int x = (int) ((Math.random()*((100-999)+1))+100);
 				String fileName = "tmp-" + x + ".txt";
 				try {
 					FileUtils.writeStringToFile(new File(fileName), content);
-				} catch (IOException e) {
-					return new SimpleEntry(2, null);
+				} 
+				catch (IOException e) {
+					throw new Exception(EX_ZONARUTA);
 				}
 				Kml fileReturn = Kml.unmarshal(new File(fileName));
-				return new SimpleEntry(0, fileReturn);
+				return fileReturn;
+			} 
+			catch (SQLException e) {
+				throw new Exception(EX_CONEXION);
 			}
-			else {
-				return new SimpleEntry(3, null);
-			}			
-		} 
-		catch (SQLException e) {
-			return new SimpleEntry(2, null);
+		}
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
+		}
+	}
+	
+	/**
+	 * 
+	 * La función borrarZona borra la entrada de la tabla zona de la base de datos
+	 * cuya clave primaria es el nombre de la zona indicado
+	 * 
+	 * @param nombre
+	 * @throws Exception
+	 */
+	public void borrarZona(String nombre) throws Exception {
+		// Comprobar si existe una entrada con la clave primaria indicada
+		if (existeEntrada(nombre)) {
+			try (PreparedStatement pstmt = con.prepareStatement(SQL_DELETE, Statement.RETURN_GENERATED_KEYS)) {
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(1, nombre);
+				
+				pstmt.executeUpdate();
+			} 
+			catch (SQLException e) {
+				throw new Exception(EX_CONEXION);
+			}
+		}
+		else {
+			throw new Exception(EX_ZONA_NO_EXISTENTE);
 		}
 	}
 }
