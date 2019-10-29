@@ -14,6 +14,10 @@ import java.sql.*;
 public class usuarioRepository extends DBConnect {
 	private final String SQL_CREAR = "INSERT INTO ecoz.usuario(email, contrasena) VALUES(?,?)";
 	
+	protected usuarioRepository() throws Exception {
+		super();
+	}
+	
 	// Es un ejemplo que no sigue los DAOS NI LOS EVA NI ESA MIERDA pero FUNCIONA y tiene SENTIDO
 	public String crearUsuario(String email, String contrasena) {
 		if (con == null) {

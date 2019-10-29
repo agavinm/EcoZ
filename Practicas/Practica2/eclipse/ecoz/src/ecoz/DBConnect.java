@@ -12,24 +12,29 @@ package ecoz;
 import java.sql.*;
 
 abstract class DBConnect { // Capa DAO
+	protected final String EX_CONEXION = "Error: No se ha podido conectar con la base de datos.";
+	protected final String EX_FINALIZE = "Error: No se ha podido cerrar la conexión con la base de datos.";
+	protected final String EX_RUTA = "Error: No se ha podido guardar la ruta.";
+	protected final String EX_ZONARUTA = "Error: No se ha podido cargar la ruta o zona.";
+	
 	protected Connection con;
 
-	protected DBConnect() {
+	protected DBConnect() throws Exception {
 		try {
 			this.con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sisinf", "sisinf", "sisinf");
 		}
 		catch(SQLException e) {
-			System.out.println("ERROR: " + e.getMessage());
+			throw new Exception(EX_CONEXION);
 		}
 	}
 	
-	protected void finalize() {
+	protected void finalize() throws Exception {
 		if (this.con != null) {
 			try {
 				this.con.close();
 			}
 			catch(SQLException e) {
-				System.out.println("ERROR: " + e.getMessage());
+				throw new Exception(EX_FINALIZE);
 			}
 		}
 	}
