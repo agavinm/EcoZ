@@ -25,3 +25,4 @@ workspace/practica1/index/
 .classpath
 .metadata/
 .settings/
+tmp*
