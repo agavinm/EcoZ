@@ -22,10 +22,11 @@ import org.apache.commons.io.FileUtils;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 
 public class zonaRepository extends DBConnect {
-
+	// Excepciones 
 	private final String EX_ZONA_NO_CREADA = "Error: Ya existe una zona con ese nombre";
 	private final String EX_ZONA_NO_EXISTENTE = "Error: No existe una zona con ese nombre";
 	
+	// Consultas SQL
 	private final String SQL_CREAR = "INSERT INTO ecoz.zona(nombre, fichero, co2, o3, no2, pm10) VALUES(?,?,?,?,?,?)";
 	
 	private final String SQL_UPDATE_CO2 = "UPDATE ecoz.zona SET co2=? WHERE nombre=?";
@@ -104,7 +105,7 @@ public class zonaRepository extends DBConnect {
 				// Primero hay que volcar el contenido del fichero kml a un txt
 				// Debido a la implementación de la librería externa usada, se genera un txt en la carpeta del proyecto
 				int x = (int) ((Math.random()*((100-999)+1))+100);
-				String fileName = "tmp-" + x + ".txt";
+				String fileName = "tmp" + x + ".txt";
 				try {
 					fichero.marshal(new File(fileName));
 				} 
@@ -154,11 +155,11 @@ public class zonaRepository extends DBConnect {
 		// Comprobar si existe una entrada con la clave primaria indicada
 		if (existeEntrada(nombre)) {
 			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_CO2, Statement.RETURN_GENERATED_KEYS)) {
-				// Agregar el nombre de la zona a la consulta
-				pstmt.setString(1, nombre);
-				
 				// Agregar a la consulta nivel de CO2
-				pstmt.setFloat(2, co2);
+				pstmt.setFloat(1, co2);
+				
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(2, nombre);
 				
 				pstmt.executeUpdate();
 			}
@@ -184,11 +185,11 @@ public class zonaRepository extends DBConnect {
 		// Comprobar si existe una entrada con la clave primaria indicada
 		if (existeEntrada(nombre)) {
 			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_O3, Statement.RETURN_GENERATED_KEYS)) {
-				// Agregar el nombre de la zona a la consulta
-				pstmt.setString(1, nombre);
-				
 				// Agregar a la consulta nivel de O3
-				pstmt.setFloat(2, o3);
+				pstmt.setFloat(1, o3);
+				
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(2, nombre);
 				
 				pstmt.executeUpdate();
 			}
@@ -214,11 +215,11 @@ public class zonaRepository extends DBConnect {
 		// Comprobar si existe una entrada con la clave primaria indicada
 		if (existeEntrada(nombre)) {
 			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_NO2, Statement.RETURN_GENERATED_KEYS)) {
-				// Agregar el nombre de la zona a la consulta
-				pstmt.setString(1, nombre);
-				
 				// Agregar a la consulta nivel de NO2
-				pstmt.setFloat(2, no2);
+				pstmt.setFloat(1, no2);
+				
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(2, nombre);
 				
 				pstmt.executeUpdate();
 			}
@@ -244,11 +245,11 @@ public class zonaRepository extends DBConnect {
 		// Comprobar si existe una entrada con la clave primaria indicada
 		if (existeEntrada(nombre)) {
 			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_PM10, Statement.RETURN_GENERATED_KEYS)) {
-				// Agregar el nombre de la zona a la consulta
-				pstmt.setString(1, nombre);
-				
 				// Agregar a la consulta nivel de PM10
-				pstmt.setFloat(2, pm10);
+				pstmt.setFloat(1, pm10);
+				
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(2, nombre);
 				
 				pstmt.executeUpdate();
 			}
@@ -275,14 +276,11 @@ public class zonaRepository extends DBConnect {
 		// Comprobar si existe una entrada con la clave primaria indicada
 		if (existeEntrada(nombre)) {
 			try (PreparedStatement pstmt = con.prepareStatement(SQL_UPDATE_FILE, Statement.RETURN_GENERATED_KEYS)) {
-				// Agregar el nombre de la zona a la consulta
-				pstmt.setString(1, nombre);
-				
 				// Agregar el fichero kml de la zona a la consulta
 				// Primero hay que volcar el contenido del fichero kml a un txt
 				// Debido a la implementación de la librería externa usada, se genera un txt en la carpeta del proyecto
 				int x = (int) ((Math.random()*((100-999)+1))+100);
-				String fileName = "tmp-" + x + ".txt";
+				String fileName = "tmp" + x + ".txt";
 				try {
 					fichero.marshal(new File(fileName));
 				} 
@@ -300,9 +298,12 @@ public class zonaRepository extends DBConnect {
 					throw new Exception(EX_RUTA);
 				}
 				
-				pstmt.setBinaryStream(2, is, (int) file.length());
+				pstmt.setBinaryStream(1, is, (int) file.length());
 				// Se borra el txt generado
 				file.delete();
+				
+				// Agregar el nombre de la zona a la consulta
+				pstmt.setString(2, nombre);
 				
 				pstmt.executeUpdate();
 				
@@ -450,16 +451,19 @@ public class zonaRepository extends DBConnect {
 				ResultSet rs = pstmt.executeQuery();
 				// Extraer el resultado
 				rs.next();
-				String content = rs.getString(1);
+				InputStream is = rs.getBinaryStream(1);
 				int x = (int) ((Math.random()*((100-999)+1))+100);
-				String fileName = "tmp-" + x + ".txt";
+				String fileName = "tmp" + x + ".txt";
 				try {
-					FileUtils.writeStringToFile(new File(fileName), content);
+					FileUtils.copyInputStreamToFile(is, new File(fileName));
 				} 
 				catch (IOException e) {
 					throw new Exception(EX_ZONARUTA);
 				}
-				Kml fileReturn = Kml.unmarshal(new File(fileName));
+				File file = new File(fileName);
+				Kml fileReturn = Kml.unmarshal(file);
+				file.delete();
+				
 				return fileReturn;
 			} 
 			catch (SQLException e) {
