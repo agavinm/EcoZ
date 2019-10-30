@@ -3,8 +3,8 @@ ESQUEMA RELACIONAL
 Dominios:
 
 Esquemas de relacion:
-   Usuario = (Email: VARCHAR, clave primaria; Nombre: VARCHAR, NO NULO; 
-              Apellidos: VARCHAR, NO NULO; FechaNacimiento: FECHA, NO NULO; 
+   Usuario = (Email: VARCHAR, clave primaria; Nombre: VARCHAR; 
+              Apellidos: VARCHAR; FechaNacimiento: FECHA; 
               Contraseña: VARCHAR, NO NULO);
 
    Ruta = (Id: ENTERO, clave primaria; Fichero: VARCHAR, NO NULO; 
