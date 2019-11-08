@@ -7,7 +7,7 @@
 // Coms:   Sistemas de información - Práctica 2
 //******************************************************************************
 
-package com.ecoz.repository;
+package src.main.java.com.ecoz.repository;
 
 import java.sql.*;
 

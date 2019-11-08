@@ -1,4 +1,4 @@
-package com.ecoz.repository;
+package src.main.java.com.ecoz.repository;
 
 import java.io.File;
 import java.io.FileInputStream;
