@@ -2,3 +2,4 @@ HELP.md
 target/
 .class
 bin/
+tmp.*
