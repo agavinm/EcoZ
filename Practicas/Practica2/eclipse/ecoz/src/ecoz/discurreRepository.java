@@ -57,7 +57,7 @@ public class discurreRepository extends DBConnect {
 	 * @param nombre
 	 * @throws Exception
 	 */
-	public void crearRuta(int id, String nombre) throws Exception {
+	public void crearDiscurre(int id, String nombre) throws Exception {
 		// Comprobar si existe una entrada con la clave primaria indicada
 		if (!existeEntrada(id,nombre)) {
 			try (PreparedStatement pstmt = con.prepareStatement(SQL_CREAR, Statement.RETURN_GENERATED_KEYS)) {
