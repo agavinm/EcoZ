@@ -123,6 +123,8 @@ public class PruebasData {
 	
 	public static void main(String[] args) {
 		try {
+			borrarTodo();
+			
 			pruebasUsuario();
 			
 			pruebasZona();
