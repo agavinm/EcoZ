@@ -115,7 +115,7 @@ public class UsuarioDAO {
 			ps.setString(1, usuario.getEmail());
 			ps.setString(2, usuario.getNombre());
 			ps.setString(3, usuario.getApellidos());
-			ps.setString(4, usuario.getCcontrasena());
+			ps.setString(4, usuario.getContrasena());
 			
 			// Ejecutar consulta
 			ps.executeUpdate();
@@ -141,7 +141,7 @@ public class UsuarioDAO {
 			PreparedStatement ps = conn.prepareStatement(SQL_UPDATE);
 			ps.setString(1, usuario.getNombre());
 			ps.setString(2, usuario.getApellidos());
-			ps.setString(3, usuario.getCcontrasena());
+			ps.setString(3, usuario.getContrasena());
 			ps.setString(4, usuario.getEmail());
 			
 			// Ejecutar consulta

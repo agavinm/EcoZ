@@ -77,11 +77,11 @@ public class UsuarioVO {
 		if (apellidos != null) this.apellidos = apellidos.trim();
 	}
 
-	public String getCcontrasena() {
+	public String getContrasena() {
 		return contrasena;
 	}
 
-	public void setCcontrasena(String contrasena) {
+	public void setContrasena(String contrasena) {
 		if (contrasena != null) this.contrasena = contrasena.trim();
 	}
 
