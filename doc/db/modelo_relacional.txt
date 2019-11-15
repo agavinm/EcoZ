@@ -1,0 +1,31 @@
+ESQUEMA RELACIONAL
+
+Dominios:
+
+Esquemas de relacion:
+   Usuario = (Email: VARCHAR, clave primaria;
+              Nombre: VARCHAR; 
+              Apellidos: VARCHAR;
+              FechaNacimiento: FECHA; 
+              Contraseña: VARCHAR, NO NULO);
+
+   Ruta = (Id: ENTERO, clave primaria;
+           Fichero: VARCHAR, NO NULO; 
+           Usuario_Email: VARCHAR, NO NULO);
+           clave ajena (Usuario_Email) referencia a Usuario(Email)
+
+   Zona = (Nombre: VARCHAR, clave primaria;
+           Fichero: VARCHAR, NO NULO; 
+           CO2: REAL, NO NULO; 
+           O3: REAL, NO NULO; 
+           NO2: REAL, NO NULO; 
+           PM10: REAL, NO NULO);
+
+   Discurre = (Ruta_Id: ENTERO; 
+               Zona_Nombre: VARCHAR);
+               clave primaria (Ruta_Id,Zona_Nombre);
+               clave ajena (Ruta_Id) referencia a Ruta(Id)
+               clave ajena (Zona_Nombre) referencia a Zona(Nombre)
+
+   Verificar que para toda ocurrencia de 'Id' en 'Ruta' existe al menos 1 ocurrencia en 'Discurre'
+
