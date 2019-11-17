@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Practica1</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body style="background-repeat: no-repeat;">
+    <div>
+        <nav class="navbar navbar-light navbar-expand-lg bg-white page-navbar" style="background-repeat: no-repeat;background-position: 200% 0%;">
+            <div class="container"><a class="navbar-brand" href="#" style="filter: blur(0px);color: #d80505;">Perfil</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                <div
+                    class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item item" role="presentation"><a class="nav-link active" href="principal.html" style="color: #d80505;">Inicio</a></li>
+                        <li class="nav-item item" role="presentation"><a class="nav-link" href="ayuda.html" style="color: #d80505;">Ayuda</a></li>
+                        <li class="nav-item item" role="presentation"><a class="nav-link" href="index.html" style="color: #d80505;">Salir</a></li>
+                    </ul>
+            </div>
+    </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <form>
+                    <h4 style="color: #d80505;">Modificar datos personales</h4>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Nombre" placeholder="Nombre"></div>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Apellidos" placeholder="Apellidos" style="margin-top: 10px;"></div>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Año de nacimiento" placeholder="Año de nacimiento" style="margin-top: 10px;"></div>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Password nuevo" placeholder="Password nuevo " style="margin-top: 10px;"></div>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Password nuevo (repetir)" placeholder="Password nuevo (repetir)" style="margin-top: 10px;"></div>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Password" placeholder="Password" style="margin-top: 10px;"></div>
+                    <div class="form-group"><button class="btn btn-primary btn-block" type="button" style="margin-top: 20px;background-color: #d80505;">Aplicar cambios</button></div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form>
+                    <h4 style="color: #d80505;">Eliminar cuenta</h4>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Email" placeholder="Email"></div>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Password" placeholder="Password" style="margin-top: 10px;"></div>
+                    <div class="form-check" style="margin-top: 10px;"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1" style="font-size: 12px;">¿Está seguro de que desea eliminar su cuenta?</label></div>
+                    <div class="form-group"><button class="btn btn-primary btn-block" type="button" style="margin-top: 20px;background-color: #d80505;">Eliminar cuenta</button></div>
+                </form>
+            </div>
+            <div class="col">
+                <h4 style="color: #d80505;">Historial de rutas</h4>
+                <div class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);">
+                    <h3 class="text-center" style="color: #d80505;">Ruta 1</h3>
+                    <div class="row">
+                        <div class="col col-7">
+                            <p style="color: #d80505;padding-left: 10px;">Origen:<br>Campus Río Ebro</p>
+                            <p style="color: #d80505;padding-left: 10px;">Destino:<br>La Romareda</p>
+                            <p style="color: #d80505;padding-left: 10px;">Distancia total:<br>10km</p>
+                            <p style="color: #d80505;padding-left: 10px;">Tiempo de recorrido:<br>1h</p>
+                            <p style="color: #d80505;padding-left: 10px;">Fecha:<br>15/10/2019</p>
+                        </div>
+                        <div class="col">
+                            <h3 class="display-4 text-center" style="color: #d80505;font-size: 36px;">54%</h3>
+                            <p class="text-center" style="color: #d80505;font-size: 12px;">Contaminación</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Cargar</button></div>
+                    </div>
+                </div>
+                <div class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);margin-top: 10px;margin-bottom: 15px;">
+                    <h3 class="text-center" style="color: #d80505;">Ruta 2</h3>
+                    <div class="row">
+                        <div class="col col-7">
+                            <p style="color: #d80505;padding-left: 10px;">Origen:<br>Campus Río Ebro</p>
+                            <p style="color: #d80505;padding-left: 10px;">Destino:<br>Cadrete</p>
+                            <p style="color: #d80505;padding-left: 10px;">Distancia total:<br>30km</p>
+                            <p style="color: #d80505;padding-left: 10px;">Tiempo de recorrido:<br>2h 1m</p>
+                            <p style="color: #d80505;padding-left: 10px;margin-bottom: 0px;">Fecha:<br>10/10/2019</p>
+                        </div>
+                        <div class="col">
+                            <h3 class="display-4 text-center" style="color: #d80505;font-size: 36px;">33%</h3>
+                            <p class="text-center" style="color: #d80505;font-size: 12px;">Contaminación</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Cargar</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

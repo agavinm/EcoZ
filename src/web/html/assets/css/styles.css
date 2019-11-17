@@ -1,0 +1,13 @@
+.header {
+  height: 80px;
+  margin-top: 40px;
+  color: #d80505;
+  text-align: center;
+}
+
+.principal {
+  background-image: url("../../assets/img/AYUNTAMIENTO.jpg");
+  background-repeat: no-repeat;
+  background-size: 20%;
+}
+

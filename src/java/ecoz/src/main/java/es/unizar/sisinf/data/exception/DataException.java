@@ -11,6 +11,7 @@ package es.unizar.sisinf.data.exception;
 
 public class DataException extends Exception {
 	
+	private static final long serialVersionUID = 1L;
 	public static final String EX_CONEXION = "Error: No se ha podido conectar con la base de datos.";
 	public static final String EX_FINALIZE = "Error: No se ha podido cerrar la conexión con la base de datos.";
 	public static final String EX_RUTA = "Error: No se ha podido guardar la ruta.";
