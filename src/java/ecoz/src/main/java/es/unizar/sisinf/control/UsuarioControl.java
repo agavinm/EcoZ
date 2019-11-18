@@ -14,7 +14,9 @@ import es.unizar.sisinf.data.dao.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
 import javax.ws.rs.Produces;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,11 +32,12 @@ public class UsuarioControl {
 	 * /registrarUsuario?email=e&contrasena=c
 	 * @param email
 	 * @param contrasena
-	 * @return
+	 * @return JSONObject
 	 */
 	@ApiOperation(value = "Registrar un usuario, devuelve {O:Ok} o {E:error}", response = Object.class)
 	@CrossOrigin
 	@RequestMapping("/registrarUsuario")
+	@Produces("application/json")
     public Object registrarUsuario(@ApiParam("email") @RequestParam("email") String email,
     		@ApiParam("contrasena") @RequestParam("contrasena") String contrasena) {
 		
@@ -44,7 +47,7 @@ public class UsuarioControl {
 			return usuarioVO;
 		} 
 		catch (Exception e) {
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			return new ErrorVO(e.getMessage());
 		}
 	}
 	
@@ -52,7 +55,7 @@ public class UsuarioControl {
 	 * /iniciarUsuario?email=e&contrasena=c
 	 * @param email
 	 * @param contrasena
-	 * @return
+	 * @return JSONObject
 	 */
 	@ApiOperation(value = "Iniciar un usuario, devuelve Json(UsuarioVO) o {error:error}", response = Object.class)
 	@CrossOrigin
@@ -69,7 +72,7 @@ public class UsuarioControl {
 				throw new Exception("Error: Contraseña incorrecta.");
 		} 
 		catch (Exception e) {
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			return new ErrorVO(e.getMessage());
 		}
 	}
 	
@@ -79,7 +82,7 @@ public class UsuarioControl {
 	 * @param contrasena
 	 * @param nombre
 	 * @param apellidos
-	 * @return
+	 * @return JSONObject
 	 */
 	@ApiOperation(value = "Actualizar un usuario, devuelve Json(UsuarioVO) o {error:error}", response = Object.class)
 	@CrossOrigin
@@ -102,7 +105,7 @@ public class UsuarioControl {
 				throw new Exception("Error: Contraseña incorrecta.");
 		} 
 		catch (Exception e) {
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			return new ErrorVO(e.getMessage());
 		}
 	}
 	
@@ -111,7 +114,7 @@ public class UsuarioControl {
 	 * @param email
 	 * @param contrasenaActual
 	 * @param contrasenaActual
-	 * @return
+	 * @return JSONObject
 	 */
 	@ApiOperation(value = "Actualiza contraseña de un usuario, devuelve Json(UsuarioVO) o {error:error}", response = Object.class)
 	@CrossOrigin
@@ -132,7 +135,7 @@ public class UsuarioControl {
 				throw new Exception("Error: Contraseña actual incorrecta.");
 		} 
 		catch (Exception e) {
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			return new ErrorVO(e.getMessage());
 		}
 	}
 	
@@ -140,7 +143,7 @@ public class UsuarioControl {
 	 * /borrarUsuario?email=e&contrasena=c
 	 * @param email
 	 * @param contrasena
-	 * @return
+	 * @return JSONObject
 	 */
 	@ApiOperation(value = "Borra un usuario, devuelve {ok:ok} o {error:error}", response = Object.class)
 	@CrossOrigin
@@ -153,13 +156,13 @@ public class UsuarioControl {
 			UsuarioVO usuarioVO = usuarioDAO.findById(new UsuarioVO(email, null, null, contrasena));
 			if (usuarioVO.getContrasena().equals(contrasena)) {
 				usuarioDAO.delete(usuarioVO);
-				return "{\"ok\":\"Usuario borrado\"}";
+				return new String[] {"ok", "ok"};
 			}
 			else
 				throw new Exception("Error: Contraseña incorrecta.");
 		} 
 		catch (Exception e) {
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			return new ErrorVO(e.getMessage());
 		}
 	}
 }
