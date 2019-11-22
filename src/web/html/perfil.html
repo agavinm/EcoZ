@@ -29,71 +29,77 @@
             <div class="col-md-4">
                 <form>
                     <h4 style="color: #d80505;">Modificar datos personales</h4>
-                    <div class="form-group"><input class="border rounded form-control" type="text" name="Nombre" placeholder="Nombre" maxlength="20"></div>
-                    <div class="form-group"><input class="border rounded form-control" type="text" name="Apellidos" placeholder="Apellidos" maxlength="20" style="margin-top: 10px;"></div>
-                    <div class="form-group"><input class="border rounded form-control" type="text" name="Password nuevo" placeholder="Password nuevo " maxlength="10" minlength="5" style="margin-top: 10px;"></div>
-                    <div class="form-group"><input class="border rounded form-control" type="text" name="Password nuevo (repetir)" placeholder="Password nuevo (repetir)" maxlength="10" minlength="5" style="margin-top: 10px;"></div>
-                    <div class="form-group"><input class="border rounded form-control" type="text" name="Password" placeholder="Password" maxlength="10" minlength="5" style="margin-top: 10px;"></div>
-                    <div class="form-group"><button class="btn btn-primary btn-block" type="button" style="margin-top: 20px;background-color: #d80505;">Aplicar cambios</button></div>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Nombre" required="" placeholder="Nombre" maxlength="20" id="modificar-nombre"></div>
+                    <div class="form-group"><input class="border rounded form-control" type="text" name="Apellidos" required="" placeholder="Apellidos" maxlength="20" id="modificar-apellidos" style="margin-top: 10px;"></div>
+                    <div class="form-group"><input class="form-control" type="password" name="Password actual" required="" placeholder="Password actual" maxlength="10" minlength="5" id="modificar-password" style="margin-top: 10px;"></div>
+                    <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="margin-top: 10px;background-color: #d80505;" onclick="modificarUsuario()">Modificar usuario</button></div>
+                </form>
+                <form style="margin-top: 30px;">
+                    <div class="form-group"><input class="form-control" type="password" name="Password actual" required="" placeholder="Password actual" maxlength="10" minlength="5" id="modificar-password-actual"></div>
+                    <div class="form-group"><input class="form-control" type="password" name="Password nueva" required="" placeholder="Password nueva" maxlength="10" minlength="5" id="modificar-password-nueva1" style="margin-top: 10px;"></div>
+                    <div class="form-group"><input class="form-control" type="password" name="Password nueva (repetir)" required="" placeholder="Password nueva (repetir)" maxlength="10" minlength="5" id="modificar-password-nueva2" style="margin-top: 10px;"></div>
+                    <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="margin-top: 10px;background-color: #d80505;" onclick="modificarPassword()">Modificar password</button></div>
                 </form>
             </div>
             <div class="col-md-4">
                 <form>
                     <h4 style="color: #d80505;">Eliminar cuenta</h4>
-                    <div class="form-group"><input class="border rounded form-control" type="text" name="Email" placeholder="Email" maxlength="10" minlength="5"></div>
-                    <div class="form-group"><input class="border rounded form-control" type="text" name="Password" placeholder="Password" style="margin-top: 10px;"></div>
-                    <div class="form-check" style="margin-top: 10px;"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1" style="font-size: 12px;">¿Está seguro de que desea eliminar su cuenta?</label></div>
-                    <div class="form-group"><button class="btn btn-primary btn-block" type="button" style="margin-top: 20px;background-color: #d80505;">Eliminar cuenta</button></div>
-                </form>
-            </div>
-            <div class="col">
-                <h4 style="color: #d80505;">Historial de rutas</h4>
-                <div class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);">
-                    <h3 class="text-center" style="color: #d80505;">Ruta 1</h3>
-                    <div class="row">
-                        <div class="col col-7">
-                            <p style="padding-left: 10px;">Origen:<br>Campus Río Ebro</p>
-                            <p style="padding-left: 10px;">Destino:<br>La Romareda</p>
-                            <p style="padding-left: 10px;">Distancia total:<br>10km</p>
-                            <p style="padding-left: 10px;">Tiempo de recorrido:<br>1h</p>
-                            <p style="padding-left: 10px;">Fecha:<br>15/10/2019</p>
-                        </div>
-                        <div class="col">
-                            <h3 class="display-4 text-center" style="color: #d80505;font-size: 36px;">54%</h3>
-                            <p class="text-center" style="font-size: 12px;">Contaminación</p>
-                        </div>
+                    <div class="form-group"><input class="form-control" type="email" name="Email" required="" placeholder="Email" maxlength="20" id="eliminar-email"></div>
+                    <div class="form-group"><input class="form-control" type="password" name="Password" required="" placeholder="Password" maxlength="10" minlength="5" id="eliminar-password" style="margin-top: 10px;"></div>
+                    <div class="form-check" style="margin-top: 10px;"><input class="form-check-input" type="checkbox" name="eliminar-confirmar" required="" id="eliminar-confirmar"><label class="form-check-label" for="eliminar-confirmar" style="font-size: 12px;">¿Está seguro de que desea eliminar su cuenta?</label></div>
+                    <div
+                        class="form-group"><button class="btn btn-primary btn-block" type="submit" style="margin-top: 20px;background-color: #d80505;" onclick="eliminarUsuario()">Eliminar cuenta</button></div>
+            </form>
+        </div>
+        <div class="col">
+            <h4 style="color: #d80505;">Historial de rutas</h4>
+            <div class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);">
+                <h3 class="text-center" style="color: #d80505;">Ruta 1</h3>
+                <div class="row">
+                    <div class="col col-7">
+                        <p style="padding-left: 10px;">Origen:<br>Campus Río Ebro</p>
+                        <p style="padding-left: 10px;">Destino:<br>La Romareda</p>
+                        <p style="padding-left: 10px;">Distancia total:<br>10km</p>
+                        <p style="padding-left: 10px;">Tiempo de recorrido:<br>1h</p>
+                        <p style="padding-left: 10px;">Fecha:<br>15/10/2019</p>
                     </div>
-                    <div class="row">
-                        <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Cargar</button></div>
+                    <div class="col">
+                        <h3 class="display-4 text-center" style="color: #d80505;font-size: 36px;">54%</h3>
+                        <p class="text-center" style="font-size: 12px;">Contaminación</p>
                     </div>
                 </div>
-                <div class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);margin-top: 10px;margin-bottom: 15px;">
-                    <h3 class="text-center" style="color: #d80505;">Ruta 2</h3>
-                    <div class="row">
-                        <div class="col col-7">
-                            <p style="padding-left: 10px;">Origen:<br>Campus Río Ebro</p>
-                            <p style="padding-left: 10px;">Destino:<br>Cadrete</p>
-                            <p style="padding-left: 10px;">Distancia total:<br>30km</p>
-                            <p style="padding-left: 10px;">Tiempo de recorrido:<br>2h 1m</p>
-                            <p style="padding-left: 10px;margin-bottom: 0px;">Fecha:<br>10/10/2019</p>
-                        </div>
-                        <div class="col">
-                            <h3 class="display-4 text-center" style="color: #d80505;font-size: 36px;">33%</h3>
-                            <p class="text-center" style="color: #d80505;font-size: 12px;">Contaminación</p>
-                        </div>
+                <div class="row">
+                    <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Cargar</button></div>
+                </div>
+            </div>
+            <div class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);margin-top: 10px;margin-bottom: 15px;">
+                <h3 class="text-center" style="color: #d80505;">Ruta 2</h3>
+                <div class="row">
+                    <div class="col col-7">
+                        <p style="padding-left: 10px;">Origen:<br>Campus Río Ebro</p>
+                        <p style="padding-left: 10px;">Destino:<br>Cadrete</p>
+                        <p style="padding-left: 10px;">Distancia total:<br>30km</p>
+                        <p style="padding-left: 10px;">Tiempo de recorrido:<br>2h 1m</p>
+                        <p style="padding-left: 10px;margin-bottom: 0px;">Fecha:<br>10/10/2019</p>
                     </div>
-                    <div class="row">
-                        <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Cargar</button></div>
+                    <div class="col">
+                        <h3 class="display-4 text-center" style="color: #d80505;font-size: 36px;">33%</h3>
+                        <p class="text-center" style="color: #d80505;font-size: 12px;">Contaminación</p>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Cargar</button></div>
                 </div>
             </div>
         </div>
     </div>
     </div>
+    </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/index.js"></script>
+    <script src="assets/js/common.js"></script>
     <script src="assets/js/md5.js"></script>
+    <script src="assets/js/perfil.js"></script>
 </body>
 
 </html>

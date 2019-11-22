@@ -7,9 +7,6 @@
  * @coms	Sistemas de información - Práctica 3
  */
 
-// Capturar submit para que no recargue la página
-$("form").submit(function() { return false; });
-
 // Función de inicio de sesión
 function acceder() {
   var email = document.getElementById("acceder-email").value;
@@ -59,19 +56,8 @@ function registrar() {
           alert(usuarioVO.error);
         }
         else {
-          //alert(usuarioVO.email);
           // Guardar usuario como JSON serializado
           localStorage['usuario'] = JSON.stringify(usuarioVO);
-          
-          // Leer usuario
-          /*var stored = localStorage['usuario'];
-          if (stored) {
-            var usuario = JSON.parse(stored);
-            alert(usuario.email);
-          }
-          else {
-            alert("No hay nada guardado.");
-          }*/
           
           window.location.replace("/ecoz/principal.html");
         }
