@@ -1,3 +1,12 @@
+/**
+ * @file	RutaControl.java
+ * @author	Andrés Gavín Murillo 716358
+ * @author	Eduardo Gimeno Soriano 721615
+ * @author	Sergio Álvarez Peiro 740241
+ * @date	Noviembre 2019
+ * @coms	Sistemas de información - Práctica 3
+ */
+
 package es.unizar.sisinf.control;
 
 import es.unizar.sisinf.data.vo.*;
@@ -6,42 +15,48 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.ArrayList;
+
 import javax.ws.rs.Produces;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 
-
 @RestController
-@Api(value="Route Management System", description="Operations pertaining to route in Route Managament System ")
+@Api(value="User Management System", description="Operations pertaining to user in User Managament System ")
 public class RutaControl {
-	
+
     RutaDAO rutaDAO = new RutaDAO();
     UsuarioDAO usuarioDAO = new UsuarioDAO();
 	
 	/**
-	 * /registrarRuta?fichero=f&usuario=u
+	 * /registrarRuta?fichero=f&usuarioEmail=e&usuarioContrasena=c
 	 * @param fichero
-	 * @param usuario
+	 * @param email
+	 * @param contrasena
 	 * @return JSONObject
 	 */
-	@ApiOperation(value = "Registrar una ruta, devuelve {O:Ok} o {E:error}", response = Object.class)
+	@ApiOperation(value = "Registrar una ruta, devuelve Json(RutaVO) o {E:error}", response = Object.class)
 	@CrossOrigin
 	@RequestMapping("/registrarRuta")
 	@Produces("application/json")
     public Object registrarRuta(@ApiParam("fichero") @RequestParam("fichero") Kml fichero,
-    		@ApiParam("usuario") @RequestParam("usuario") String email) {
+    		@ApiParam("email") @RequestParam("email") String email,
+    		@ApiParam("contrasena") @RequestParam("contrasena") String contrasena) {
 		
 		try {
-			UsuarioVO usuarioaux = new UsuarioVO(email,null,null,null);
-			UsuarioVO usuarioVO = usuarioDAO.findById(usuarioaux);
-			
-			RutaVO rutaVO = new RutaVO(fichero,usuarioVO);
-			rutaDAO.create(rutaVO);
-			return rutaVO;
+			UsuarioVO usuarioVO = usuarioDAO.findById(new UsuarioVO(email, null, null, contrasena));
+			if (usuarioVO.getContrasena().equals(contrasena)) {
+				RutaVO rutaVO = new RutaVO(fichero, usuarioVO);
+				rutaDAO.create(rutaVO);
+				return rutaVO;
+			}
+			else
+				throw new Exception("Error: Contraseña incorrecta.");
 		} 
 		catch (Exception e) {
 			return new ErrorVO(e.getMessage());
@@ -49,44 +64,63 @@ public class RutaControl {
 	}
 	
 	/**
-	 * /borrarRuta?id=i
-	 * @param id
+	 * /devolverRutas?usuarioEmail=e&usuarioContrasena=c
+	 * @param email
+	 * @param contrasena
 	 * @return JSONObject
 	 */
-	@ApiOperation(value = "Borrar una ruta, devuelve {O:Ok} o {E:error}", response = Object.class)
+	@ApiOperation(value = "Devuelve las rutas de un usuario, devuelve Json(ArrayList<RutaVO>) o {error:error}", response = Object.class)
+	@CrossOrigin
+	@RequestMapping("/devolverRutas")
+	@Produces("application/json")
+    public Object devolverRutas(@ApiParam("email") @RequestParam("email") String email,
+    		@ApiParam("contrasena") @RequestParam("contrasena") String contrasena) {
+		
+		try {
+			UsuarioVO usuarioVO = usuarioDAO.findById(new UsuarioVO(email, null, null, contrasena));
+			if (usuarioVO.getContrasena().equals(contrasena)) {
+				ArrayList<RutaVO> rutaVOList = rutaDAO.findByUser(usuarioVO);
+				return rutaVOList;
+			}
+			else
+				throw new Exception("Error: Contraseña incorrecta.");
+		} 
+		catch (Exception e) {
+			return new ErrorVO(e.getMessage());
+		}
+	}
+	
+	/**
+	 * /borrarRuta?rutaId=r&usuarioEmail=e&usuarioContrasena=c
+	 * @param rutaId
+	 * @param email
+	 * @param contrasena
+	 * @return JSONObject
+	 */
+	@ApiOperation(value = "Borra una ruta, devuelve {ok:ok} o {error:error}", response = Object.class)
 	@CrossOrigin
 	@RequestMapping("/borrarRuta")
 	@Produces("application/json")
-    public Object borrarRuta(@ApiParam("id") @RequestParam("id") int id) {
+    public Object borrarRuta(@ApiParam("rutaId") @RequestParam("rutaId") Integer rutaId,
+    		@ApiParam("email") @RequestParam("email") String email,
+    		@ApiParam("contrasena") @RequestParam("contrasena") String contrasena) {
 		
 		try {
-			RutaVO rutaaux = new RutaVO(id);
-			RutaVO rutaVO = rutaDAO.findById(rutaaux);
-			rutaDAO.delete(rutaVO);
-			return new String[] {"ok", "ok"};
+			UsuarioVO usuarioVO = usuarioDAO.findById(new UsuarioVO(email, null, null, contrasena));
+			if (usuarioVO.getContrasena().equals(contrasena)) {
+				RutaVO rutaVO = rutaDAO.findById(new RutaVO(rutaId));
+				if (rutaVO.getUsuario().equals(usuarioVO)) {
+					rutaDAO.delete(rutaVO);
+					return new String[] {"ok", "ok"};
+				}
+				else
+					throw new Exception("Error: La ruta no pertenece al usuario.");
+			}
+			else
+				throw new Exception("Error: Contraseña incorrecta.");
 		} 
 		catch (Exception e) {
 			return new ErrorVO(e.getMessage());
 		}
 	}
-	
-	/**
-	 * /devolverRutas?email=e
-	 * @param email
-	 * @return JSONObject
-	 */
-	@ApiOperation(value = "Devolver rutas de usuario, devuelve {O:Ok} o {E:error}", response = Object.class)
-	@CrossOrigin
-	@RequestMapping("/devolverRuta")
-	@Produces("application/json")
-    public Object devolverRutas(@ApiParam("email") @RequestParam("email") String email) {
-		
-		try {
-			// Falta función DAO
-		} 
-		catch (Exception e) {
-			return new ErrorVO(e.getMessage());
-		}
-	}
-	
 }

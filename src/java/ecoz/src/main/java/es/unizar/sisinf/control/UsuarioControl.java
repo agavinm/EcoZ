@@ -34,7 +34,7 @@ public class UsuarioControl {
 	 * @param contrasena
 	 * @return JSONObject
 	 */
-	@ApiOperation(value = "Registrar un usuario, devuelve {O:Ok} o {E:error}", response = Object.class)
+	@ApiOperation(value = "Registrar un usuario, devuelve Json(UsuarioVO) o {E:error}", response = Object.class)
 	@CrossOrigin
 	@RequestMapping("/registrarUsuario")
 	@Produces("application/json")

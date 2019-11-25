@@ -25,6 +25,7 @@ public class DiscurreDAO {
 	private final String SQL_CREATE = "INSERT INTO ecoz.discurre(ruta_id, zona_nombre) VALUES(?,?)";
 	private final String SQL_DELETE = "DELETE FROM ecoz.discurre WHERE ruta_id=? AND zona_nombre=?";
 	private final String SQL_FIND_BY_ID = "SELECT * FROM ecoz.discurre WHERE ruta_id=? AND zona_nombre=?";
+	private final String SQL_FIND_BY_RUTA = "SELECT * FROM ecoz.discurre WHERE ruta_id=?";
 	private final String SQL_FIND_ALL = "SELECT * FROM ecoz.discurre";
 	
 	private RutaDAO rutaDAO = new RutaDAO();
@@ -68,6 +69,40 @@ public class DiscurreDAO {
 		
 		if (result == null) 
 			throw new DataException(EX_NOEXISTE);
+		
+		return result;
+	}
+
+	/**
+	 * La función findByRuta selecciona las entradas de la tabla discurre
+	 * de la base de datos
+	 * 
+	 * @return ArrayList<DiscurreVO>
+	 * @throws DataException
+	 */
+	public ArrayList<DiscurreVO> findByRuta(RutaVO ruta) throws DataException {
+		ArrayList<DiscurreVO> result = new ArrayList<>();
+		
+		try {
+			// Abrir conexión e inicializar los parámetros
+			Connection conn = ConnectionManager.getConnection();
+			PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_RUTA);
+			ps.setInt(1, ruta.getId());
+			
+			// Ejecutar consulta
+			ResultSet rs = ps.executeQuery();
+			
+			// Leer resultados
+			while(rs.next()) {
+				result.add(new DiscurreVO(rutaDAO.findById(new RutaVO(rs.getInt("ruta_id"))), 
+						zonaDAO.findById(new ZonaVO(rs.getString("zona_nombre"), null, null, null, 
+								null, null))));
+			}
+			ConnectionManager.releaseConnection(conn);
+		}
+		catch (SQLException e) {
+			throw new DataException(DataException.EX_CONEXION);
+		}
 		
 		return result;
 	}

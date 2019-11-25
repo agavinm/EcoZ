@@ -1,12 +1,14 @@
 # Operaciones necesarias para la capa control  
   
 ## Discurre  
-  - /discurrePor RutaVO (devuelve ArrayList<ZonaVO>)  
+  - /registrarDiscurre rutaId zonaNombre (devuelve DiscurreVO)  
+  - /discurrePor rutaId (devuelve ArrayList<ZonaVO>)  
+  - /borrarDiscurre rutaId zonaNombre
 
 ## Ruta  
-  - /registrarRuta fichero UsuarioVO (devuelve RutaVO)  
-  - /borrarRuta RutaVO  
-  - /devolverRutas UsuarioVO (devuelve ArrayList<RutaVO>)  
+  - /registrarRuta fichero email contrasena (devuelve RutaVO)  
+  - /borrarRuta rutaId email contrasena  
+  - /devolverRutas email contrasena (devuelve ArrayList<RutaVO>)  
 
 ## Usuario  
   - /registrarUsuario email contrasena (devuelve UsuarioVO)  

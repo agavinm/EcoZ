@@ -62,15 +62,16 @@ public class PruebasData {
 		RutaDAO r = new RutaDAO();
 
 		ArrayList<UsuarioVO> usuarios = u.findAll();
-		Integer ruta = 5;
 		
-		r.create(new RutaVO(ruta, new Kml(), usuarios.get(0)));
-		r.create(new RutaVO(ruta+1, new Kml(), usuarios.get(0)));
-		r.create(new RutaVO(ruta+2, new Kml(), usuarios.get(0)));
-		System.out.println(r.findById(new RutaVO(ruta, null, null)));
-		r.update(new RutaVO(ruta, new Kml(), usuarios.get(usuarios.size()-1)));
+		r.create(new RutaVO(new Kml(), usuarios.get(0)));
+		r.create(new RutaVO(new Kml(), usuarios.get(0)));
+		RutaVO rutaVO = new RutaVO(new Kml(), usuarios.get(0));
+		r.create(rutaVO);
+		System.out.println(r.findById(rutaVO));
+		rutaVO.setUsuario(usuarios.get(usuarios.size()-1));
+		r.update(rutaVO);
 		System.out.println(r.findAll());
-		r.delete(new RutaVO(ruta, null, null));
+		r.delete(rutaVO);
 	}
 	
 	public static void pruebasDiscurre() throws Exception {
@@ -88,7 +89,7 @@ public class PruebasData {
 		d.create(new DiscurreVO(rutas.get(0), zonas.get(0)));
 		System.out.println(d.findById(new DiscurreVO(rutas.get(0), zonas.get(0))));
 		System.out.println(d.findAll());
-		d.delete(new DiscurreVO(rutas.get(0), zonas.get(0)));
+		//d.delete(new DiscurreVO(rutas.get(0), zonas.get(0)));
 	}
 	
 	public static void borrarTodo() throws Exception {
@@ -133,7 +134,7 @@ public class PruebasData {
 			
 			pruebasDiscurre();
 			
-			borrarTodo();
+			//borrarTodo();
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());

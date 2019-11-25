@@ -33,12 +33,18 @@ public class RutaDAO {
 	private final String SQL_UPDATE = "UPDATE ecoz.ruta SET fichero=?, usuario_email=? WHERE id=?";
 	private final String SQL_DELETE = "DELETE FROM ecoz.ruta WHERE id=?";
 	private final String SQL_FIND_BY_ID = "SELECT * FROM ecoz.ruta WHERE id=?";
+	private final String SQL_FIND_BY_USER = "SELECT * FROM ecoz.ruta WHERE usuario_email=?";
 	private final String SQL_FIND_ALL = "SELECT * FROM ecoz.ruta";
 	private final String SQL_FIND_HIGHEST_ID = "SELECT id FROM ecoz.ruta ORDER BY id DESC LIMIT 1";
 	
 	private UsuarioDAO usuarioDAO = new UsuarioDAO();
 	
-	// Función que devuelve una id para una nueva ruta.
+	/**
+	 * La función generateID devuelve el siguiente id a asignar
+	 * 
+	 * @return id
+	 * @throws DataException
+	 */
 	public int generateID() {
 		int newID = 0;
 		try {
@@ -48,9 +54,11 @@ public class RutaDAO {
 			
 			// Ejecutar consulta
 			ResultSet rs = ps.executeQuery();
-			
-			// Devolver resultados
-			newID = rs.getInt("id") + 1;
+
+			// Leer resultados			
+			if (rs.next()) {
+				newID = rs.getInt("id") + 1;
+			}
 		}
 		catch (SQLException | DataException e) {
 			newID = 0;
@@ -96,6 +104,7 @@ public class RutaDAO {
 				result = new RutaVO(fileReturn, 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
 								null, null, null)));
+				result.setId(ruta.getId());
 			}
 			else {
 				result = null;
@@ -113,7 +122,56 @@ public class RutaDAO {
 	}
 	
 	/**
-	 * La función findById selecciona las entradas de la tabla ruta
+	 * La función findByUser selecciona las entradas de la tabla ruta
+	 * de la base de datos
+	 * 
+	 * @return ArrayList<RutaVO>
+	 * @throws DataException
+	 */
+	public ArrayList<RutaVO> findByUser(UsuarioVO usuarioVO) throws DataException {
+		ArrayList<RutaVO> result = new ArrayList<>();
+		
+		try {
+			// Abrir conexión e inicializar los parámetros
+			Connection conn = ConnectionManager.getConnection();
+			PreparedStatement ps = conn.prepareStatement(SQL_FIND_BY_USER);
+			ps.setString(1, usuarioVO.getEmail());
+			
+			// Ejecutar consulta
+			ResultSet rs = ps.executeQuery();
+			
+			// Leer resultados			
+			while(rs.next()) {
+				InputStream is = rs.getBinaryStream("fichero");
+				int x = (int) ((Math.random()*((100-999)+1))+100);
+				String fileName = "tmp" + x + ".txt";
+				try {
+					FileUtils.copyInputStreamToFile(is, new File(fileName));
+				} 
+				catch (IOException e) {
+					throw new DataException(DataException.EX_ZONARUTA);
+				}
+				File file = new File(fileName);
+				Kml fileReturn = Kml.unmarshal(file);
+				file.delete();
+				
+				RutaVO rutaVO = new RutaVO(fileReturn, 
+						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
+								null, null, null)));
+				rutaVO.setId(rs.getInt("id"));
+				result.add(rutaVO);
+			}
+			ConnectionManager.releaseConnection(conn);
+		}
+		catch (SQLException e) {
+			throw new DataException(DataException.EX_CONEXION);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * La función findAll selecciona las entradas de la tabla ruta
 	 * de la base de datos
 	 * 
 	 * @return ArrayList<RutaVO>
@@ -145,9 +203,11 @@ public class RutaDAO {
 				Kml fileReturn = Kml.unmarshal(file);
 				file.delete();
 				
-				result.add(new RutaVO(fileReturn, 
+				RutaVO rutaVO = new RutaVO(fileReturn, 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
-								null, null, null))));
+								null, null, null)));
+				rutaVO.setId(rs.getInt("id"));
+				result.add(rutaVO);
 			}
 			ConnectionManager.releaseConnection(conn);
 		}
@@ -173,11 +233,12 @@ public class RutaDAO {
 			
 			// Generar y agregar el identificador de la ruta
 			int id = generateID();
-			ps.setInt(1, id);
 			
 			if (ruta.getId() == null) {
 				ruta.setId(id);
 			}
+
+			ps.setInt(1, ruta.getId());
 		
 			// Agregar el fichero kml de la ruta a la consulta
 			// Primero hay que volcar el contenido del fichero kml a un txt
