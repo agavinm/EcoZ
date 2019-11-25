@@ -53,7 +53,7 @@ public class DiscurreDAO {
 			
 			// Leer resultados
 			if (rs.next()) {
-				result = new DiscurreVO(rutaDAO.findById(new RutaVO(rs.getInt("ruta_id"), null, null)), 
+				result = new DiscurreVO(rutaDAO.findById(new RutaVO(rs.getInt("ruta_id"))), 
 						zonaDAO.findById(new ZonaVO(rs.getString("zona_nombre"), null, null, null, 
 								null, null)));
 			}
@@ -92,7 +92,7 @@ public class DiscurreDAO {
 			
 			// Leer resultados
 			while(rs.next()) {
-				result.add(new DiscurreVO(rutaDAO.findById(new RutaVO(rs.getInt("ruta_id"), null, null)), 
+				result.add(new DiscurreVO(rutaDAO.findById(new RutaVO(rs.getInt("ruta_id"))), 
 						zonaDAO.findById(new ZonaVO(rs.getString("zona_nombre"), null, null, null, 
 								null, null))));
 			}

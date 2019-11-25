@@ -34,8 +34,29 @@ public class RutaDAO {
 	private final String SQL_DELETE = "DELETE FROM ecoz.ruta WHERE id=?";
 	private final String SQL_FIND_BY_ID = "SELECT * FROM ecoz.ruta WHERE id=?";
 	private final String SQL_FIND_ALL = "SELECT * FROM ecoz.ruta";
+	private final String SQL_FIND_HIGHEST_ID = "SELECT id FROM ecoz.ruta ORDER BY id DESC LIMIT 1";
 	
 	private UsuarioDAO usuarioDAO = new UsuarioDAO();
+	
+	// Función que devuelve una id para una nueva ruta.
+	public int generateID() {
+		int newID = 0;
+		try {
+			// Abrir conexión e inicializar los parámetros
+			Connection conn = ConnectionManager.getConnection();
+			PreparedStatement ps = conn.prepareStatement(SQL_FIND_HIGHEST_ID);
+			
+			// Ejecutar consulta
+			ResultSet rs = ps.executeQuery();
+			
+			// Devolver resultados
+			newID = rs.getInt("id") + 1;
+		}
+		catch (SQLException | DataException e) {
+			newID = 0;
+		}
+		return newID;
+	}
 	
 	/**
 	 * La función findById selecciona la entrada de la tabla ruta
@@ -72,7 +93,7 @@ public class RutaDAO {
 				Kml fileReturn = Kml.unmarshal(file);
 				file.delete();
 				
-				result = new RutaVO(rs.getInt("id"), fileReturn, 
+				result = new RutaVO(fileReturn, 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
 								null, null, null)));
 			}
@@ -124,7 +145,7 @@ public class RutaDAO {
 				Kml fileReturn = Kml.unmarshal(file);
 				file.delete();
 				
-				result.add(new RutaVO(rs.getInt("id"), fileReturn, 
+				result.add(new RutaVO(fileReturn, 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
 								null, null, null))));
 			}
@@ -150,8 +171,13 @@ public class RutaDAO {
 			Connection conn = ConnectionManager.getConnection();
 			PreparedStatement ps = conn.prepareStatement(SQL_CREATE);
 			
-			// Agregar el identificador de la ruta
-			ps.setInt(1, ruta.getId());
+			// Generar y agregar el identificador de la ruta
+			int id = generateID();
+			ps.setInt(1, id);
+			
+			if (ruta.getId() == null) {
+				ruta.setId(id);
+			}
 		
 			// Agregar el fichero kml de la ruta a la consulta
 			// Primero hay que volcar el contenido del fichero kml a un txt
