@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Zona 6</name>
+    <Style id="poly-9C27B0-2000-77-nodesc-normal">
+      <LineStyle>
+        <color>ffb0279c</color>
+        <width>2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4db0279c</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="poly-9C27B0-2000-77-nodesc-highlight">
+      <LineStyle>
+        <color>ffb0279c</color>
+        <width>3</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4db0279c</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="poly-9C27B0-2000-77-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-9C27B0-2000-77-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-9C27B0-2000-77-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>Zona 6</name>
+      <styleUrl>#poly-9C27B0-2000-77-nodesc</styleUrl>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <tessellate>1</tessellate>
+            <coordinates>
+              -0.9416883,41.653246,0
+              -0.94186,41.620467,0
+              -0.9085154,41.6202738,0
+              -0.9079896,41.6284687,0
+              -0.9078929,41.6365353,0
+              -0.907356,41.652861,0
+              -0.9416883,41.653246,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Document>
+</kml>
