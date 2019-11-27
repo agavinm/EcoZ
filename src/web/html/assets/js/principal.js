@@ -66,6 +66,7 @@ function initMap() {
     });
     
     // Generar y mostrar las rutas en el mapa
+    var numRutas = 0;
     function calcularRutas() {
         if (numMarcadores == 2) {
             var request = {
@@ -87,14 +88,17 @@ function initMap() {
                         if (i == 0) {
                             data = result.routes[0].legs[0];
                             loadRoute1(data.distance.text,data.duration.text,"0%");
+                            ++numRutas;
                         }
                         else if (i == 1) {
                             data = result.routes[1].legs[0];
                             loadRoute2(data.distance.text,data.duration.text,"0%");
+                            ++numRutas;
                         }
                         else if (i == 2) {
                             data = result.routes[2].legs[0];
                             loadRoute3(data.distance.text,data.duration.text,"0%");
+                            ++numRutas;
                         }
                     }
                 }
@@ -112,6 +116,7 @@ function initMap() {
         map.setCenter(zaragoza);
         map.setZoom(12);
         numMarcadores = 0;
+        numRutas = 0;
         markerOrigin.setMap(null);
         markerDestination.setMap(null);
         directionsRenderer[0].setMap(null);
@@ -146,8 +151,12 @@ function initMap() {
     function displayAll() {
         console.log('FUERA');
         directionsRenderer[0].setMap(map);
-        directionsRenderer[1].setMap(map);
-        directionsRenderer[2].setMap(map);
+        if (numRutas > 1) {
+            directionsRenderer[1].setMap(map);
+        }
+        if (numRutas > 2) {
+            directionsRenderer[2].setMap(map);
+        }
     }
     
     // Mostrar la información de la ruta1
