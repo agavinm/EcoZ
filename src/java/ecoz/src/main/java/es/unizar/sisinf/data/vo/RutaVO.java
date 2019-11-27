@@ -29,26 +29,16 @@ public class RutaVO {
 	private UsuarioVO usuario;
 
 	/**
-	 * constructor que permite crear objetos RUTA a partir de un fichero y un usuario
+	 * constructor que permite crear objetos RUTA a partir de sus componentes
+	 * @param id
 	 * @param fichero
 	 * @param usuario
 	 */
-	public RutaVO(Kml fichero, UsuarioVO usuario) {
-		super();
-		this.id = null;
-		this.fichero = fichero;
-		this.usuario = usuario;
-	}
-	
-	/**
-	 * constructor que permite crear objetos RUTA a partir de la id
-	 * @param id
-	 */
-	public RutaVO(int id) {
+	public RutaVO(Integer id, Kml fichero, UsuarioVO usuario) {
 		super();
 		this.id = id;
-		this.fichero = null;
-		this.usuario = null;
+		this.fichero = fichero;
+		this.usuario = usuario;
 	}
 	
 	/*
