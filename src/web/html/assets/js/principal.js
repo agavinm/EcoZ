@@ -1,3 +1,51 @@
+/**
+ * @file	principal.js
+ * @author	Andrés Gavín Murillo 716358
+ * @author	Eduardo Gimeno Soriano 721615
+ * @author	Sergio Álvarez Peiro 740241
+ * @date	Noviembre 2019
+ * @coms	Sistemas de información - Práctica 3
+ */
+
+var zonasInfo;
+
+$(document).ready(function() {
+  var co2 = 0, pm10 = 0, o3 = 0, no2 = 0;
+  
+  $.ajax({
+      type: "GET",  
+      url: "/ecoz/devolverzonasInfo",
+      success: function(zonaVOList) {
+        if (zonaVOList.hasOwnProperty('error')) {
+          alert(zonaVOList.error);
+        }
+        else {
+          // Guardar zonasInfo como JSON serializado
+          zonasInfo = JSON.stringify(zonaVOList);
+          for (var i = 0; i < zonasInfo.counters.length; i++) {
+            zonasInfo.counters[i] = JSON.stringify(zonasInfo.counters[i]);
+            
+            // Datos totales
+            co2 = co2 + zonasInfo.counters[i].co2;
+            pm10 = pm10 + zonasInfo.counters[i].pm10;
+            o3 = o3 + zonasInfo.counters[i].o3;
+            no2 = no2 + zonasInfo.counters[i].no2;
+          }
+          
+          document.getElementById("co2-media").value = co2 / zonasInfo.counters.length;
+          document.getElementById("pm10-media").value = pm10 / zonasInfo.counters.length;
+          document.getElementById("o3-media").value = o3 / zonasInfo.counters.length;
+          document.getElementById("no2-media").value = no2 / zonasInfo.counters.length;
+          
+        }
+      },
+      
+      error: function(){  
+        alert('Error: No se ha podido establecer la conexión.');
+      }
+    });
+});
+
 // Inicializar el mapa centrado en Zaragoza
 function initMap() {
     // Botones para calcular rutas y reiniciar
@@ -9,6 +57,8 @@ function initMap() {
     
     // Generar el mapa
     var map = new google.maps.Map(document.getElementById("map"), {zoom: 12, center: zaragoza});
+    
+    // Renderizador y servicio de direcciones
     var directionsService = new google.maps.DirectionsService();
     
     var line1 = new google.maps.Polyline({
@@ -65,6 +115,76 @@ function initMap() {
         }
     });
     
+    // Aray de coordenadas de cada ruta
+    var points1 = [];
+    var points2 = [];
+    var points3 = [];
+    
+    // Zonas del mapa
+    var zone = [];
+    zone[9] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.6152883,-0.8767636), //BL
+        new google.maps.LatLng(41.652719,-0.8456517) //TR
+    )
+    zone[8] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.604812,-0.908929), //BL
+        new google.maps.LatLng(41.632403,-0.876313) //TR
+    );
+    zone[7] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.6326279,-0.9078558), //BL
+        new google.maps.LatLng(41.652861,-0.876114) //TR
+    );
+    zone[6] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.652861,-0.876114), //BL
+        new google.maps.LatLng(41.676396,-0.814344) //TR
+    );
+    zone[5] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.620467,-0.94186), //BL
+        new google.maps.LatLng(41.652861,-0.907356) //TR
+    );
+    zone[4] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.644459,-0.96821), //BL
+        new google.maps.LatLng(41.66652,-0.941431)  //TR
+    );
+    zone[3] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.653246,-0.9416883), //BL
+        new google.maps.LatLng(41.676138,-0.907356) //TR
+    );
+    zone[2] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.652861,-0.907356), //BL
+        new google.maps.LatLng(41.676138,-0.875256) //TR
+    );
+    zone[1] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.676138,-0.875256), //BL
+        new google.maps.LatLng(41.697609,-0.84779) //TR
+    );
+    zone[0] = new google.maps.LatLngBounds(
+        new google.maps.LatLng(41.676138,-0.907356), //BL
+        new google.maps.LatLng(41.697803,-0.875256) //TR
+    );
+    
+    
+    
+    // Lista de zonas por las que pasa cada ruta
+    var zonesOfRoute = [];
+    zonesOfRoute[0] = [];
+    zonesOfRoute[1] = [];
+    zonesOfRoute[2] = [];
+    
+    // Añade al array de zonesOfRoute las zonas por las que pasa unos puntos.
+    function discurrePor(listaPuntos,numRuta) {
+        for (var k in listaPuntos) {
+            for (var j = 0; j < 10; ++j) {
+                if (zone[j].contains(listaPuntos[k])) {
+                    var nuevaZona = "Zona".concat(String(j+1));
+                    if (!(zonesOfRoute[numRuta-1].includes(nuevaZona))) {
+                        zonesOfRoute[numRuta-1].push(nuevaZona);
+                    }
+                }
+            }
+        }
+    }
+    
     // Generar y mostrar las rutas en el mapa
     var numRutas = 0;
     function calcularRutas() {
@@ -86,18 +206,42 @@ function initMap() {
                         directionsRenderer[i].setMap(map);
                         var data;
                         if (i == 0) {
+                            var pollution1;
+                            points1 = result.routes[0].overview_path;
+                            discurrePor(points1,1);
+                            var zones1 = zonesOfRoute[0];
+                            for (var l in zones1) {
+                                pollution1 = pollution1 + zonasInfo.zones1[l].c02;
+                            }
+                            pollution1 = pollution1 / zones1.length;
                             data = result.routes[0].legs[0];
-                            loadRoute1(data.distance.text,data.duration.text,"0%");
+                            loadRoute1(data.distance.text,data.duration.text,pollution1);
                             ++numRutas;
                         }
                         else if (i == 1) {
+                            var pollution2;
+                            points2 = result.routes[1].overview_path;
+                            discurrePor(points2,2);
+                            var zones2 = zonesOfRoute[1];
+                            for (var m in zones2) {
+                                pollution2 = pollution2 + zonasInfo.zones2[m].c02;
+                            }
+                            pollution2 = pollution2 / zones2.length;
                             data = result.routes[1].legs[0];
-                            loadRoute2(data.distance.text,data.duration.text,"0%");
+                            loadRoute2(data.distance.text,data.duration.text,pollution2);
                             ++numRutas;
                         }
                         else if (i == 2) {
+                            var pollution3;
+                            points3 = result.routes[2].overview_path;
+                            discurrePor(points3,3);
+                            var zones3 = zonesOfRoute[2];
+                            for (var n in zones3) {
+                                pollution3 = pollution3 + zonasInfo.zones3[n].c02;
+                            }
+                            pollution3 = pollution3 / zones3.length;
                             data = result.routes[2].legs[0];
-                            loadRoute3(data.distance.text,data.duration.text,"0%");
+                            loadRoute3(data.distance.text,data.duration.text,pollution3);
                             ++numRutas;
                         }
                     }
@@ -131,25 +275,21 @@ function initMap() {
     }
     
     function highlight1() {
-        console.log('DENTRO1');
         directionsRenderer[1].setMap(null);
         directionsRenderer[2].setMap(null);
     }
     
     function highlight2() {
-        console.log('DENTRO2');
         directionsRenderer[0].setMap(null);
         directionsRenderer[2].setMap(null);
     }
     
     function highlight3() {
-        console.log('DENTRO3');
         directionsRenderer[0].setMap(null);
         directionsRenderer[1].setMap(null);
     }
     
     function displayAll() {
-        console.log('FUERA');
         directionsRenderer[0].setMap(map);
         if (numRutas > 1) {
             directionsRenderer[1].setMap(map);
