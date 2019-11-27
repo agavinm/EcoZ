@@ -192,7 +192,7 @@ function initMap() {
         t3.innerHTML = "Tiempo:<br>".concat(time);
         d3.innerHTML = "Distancia:<br>".concat(distance);
         p3.innerHTML = pollution;
-        r3.addEventListener('mouseover',highlight1);
+        r3.addEventListener('mouseover',highlight3);
         r3.addEventListener('mouseleave',displayAll);
     }
 }
