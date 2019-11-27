@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+       /* Set the size of the div element that contains the map */
+        #map {
+        height: 80%;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+        }
+    </style>
 </head>
 
 <body style="background-repeat: no-repeat;">
@@ -27,21 +34,21 @@
         <div class="map-example">
             <div class="row" style="height: 700px;">
                 <div class="col-lg-6 col-lg-7 text-center">
-                    <h2 class="text-left" style="color: #d80505;">Selecciona un origen y destino</h2><iframe class="border rounded-0 d-xl-flex" allowfullscreen="" frameborder="0" width="100%" height="80%" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD6fPrIUxkxHuMYUiXOe4IMoExDCLcpGKI&amp;q=Zaragoza&amp;zoom=10"
-                        style=";"></iframe>
-                    <div class="btn-group d-xl-flex" role="group"><button class="btn btn-primary" type="button" style="background-color: #d80505;margin: auto;">Calcular</button><button class="btn btn-primary" type="button" style="background-color: #d80505;margin: auto;margin-left: 5px;">Reiniciar</button></div>
+                    <h2 class="text-left" style="color: #d80505;">Selecciona un origen y destino</h2>
+                    <div id="map"></div>
+                    <div class="btn-group d-xl-flex" role="group"><button id="calcular" class="btn btn-primary" type="button" style="background-color: #d80505;margin: auto;">Calcular</button><button id="reiniciar" class="btn btn-primary" type="button" style="background-color: #d80505;margin: auto;margin-left: 5px;">Reiniciar</button></div>
                 </div>
                 <div class="col">
                     <h2 style="color: #d80505;">Rutas disponibles</h2><a class="text-center forgot" href="perfil.html" style="color: #d80505;">&nbsp;Consultar historial de rutas</a>
-                    <div class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);">
-                        <h3 class="text-center" style="color: #d80505;">Ruta 1</h3>
+                    <div id="route1" class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);display: none">
+                        <h3 class="text-center" style="color: #F47FFF;">Ruta 1</h3>
                         <div class="row">
                             <div class="col col-7">
-                                <p style="padding-left: 10px;">Distancia total:<br>10km</p>
-                                <p style="padding-left: 10px;">Tiempo de recorrido:<br>1h</p>
+                                <p id="distance1" style="padding-left: 10px;">Distancia total:<br></p>
+                                <p id="time1" style="padding-left: 10px;">Tiempo de recorrido:<br></p>
                             </div>
                             <div class="col">
-                                <h3 class="display-4 text-center" style="color: #d80505;">54%</h3>
+                                <h3 id="pollution1" class="display-4 text-center" style="color: #d80505;"></h3>
                                 <p class="text-center" style="color: #d80505;">Contaminación</p>
                             </div>
                         </div>
@@ -49,26 +56,43 @@
                             <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Guardar</button></div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="border rounded" style="background-color: #e4e1e1;">
-                        <h3 class="text-center" style="color: #d80505;">Ruta 2</h3>
+                    <hr id="separator1" style="display: none;">
+                    <div id="route2" class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);display: none">
+                        <h3 class="text-center" style="color: #1abc9c;">Ruta 2</h3>
                         <div class="row">
                             <div class="col col-7">
-                                <p style="padding-left: 10px;">Distancia total:<br>30km</p>
-                                <p style="color: #d8050;padding-left: 10px;">Tiempo de recorrido:<br>2h 1m</p>
+                                <p id="distance2" style="padding-left: 10px;">Distancia total:<br></p>
+                                <p id="time2" style="padding-left: 10px;">Tiempo de recorrido:<br></p>
                             </div>
                             <div class="col">
-                                <h3 class="display-4 text-center" style="color: #d80505;">33%</h3>
-                                <p class="text-center">Contaminación</p>
+                                <h3 id="pollution2" class="display-4 text-center" style="color: #d80505;"></h3>
+                                <p class="text-center" style="color: #d80505;">Contaminación</p>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="margin: auto;background-color: #d80505;">Guardar</button></div>
+                            <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Guardar</button></div>
+                        </div>
+                    </div>
+                    <hr id="separator2" style="display: none;">
+                    <div id="route3" class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);display: none">
+                        <h3 class="text-center" style="color: #fc8403;">Ruta 3</h3>
+                        <div class="row">
+                            <div class="col col-7">
+                                <p id="distance3" style="padding-left: 10px;">Distancia total:<br></p>
+                                <p id="time3" style="padding-left: 10px;">Tiempo de recorrido:<br></p>
+                            </div>
+                            <div class="col">
+                                <h3 id="pollution3" class="display-4 text-center" style="color: #d80505;"></h3>
+                                <p class="text-center" style="color: #d80505;">Contaminación</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Guardar</button></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row" style="margin-top: 15px;">
+            <div class="row" style="margin-top: 20px;">
                 <div class="col">
                     <h2 style="color: #d80505;">Niveles de contaminación</h2>
                     <div class="table-responsive">
@@ -96,9 +120,10 @@
             </div>
         </div>
     </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/common.js"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgXesNvhENa2zrC83lv9howWy0I02lWgg&callback=initMap">
+    </script>
+    <script src="assets/js/principal.js"></script>
 </body>
 
 </html>
