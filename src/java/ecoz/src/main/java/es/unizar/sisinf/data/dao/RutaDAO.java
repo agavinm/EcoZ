@@ -90,7 +90,7 @@ public class RutaDAO {
 				InputStream is = rs.getBinaryStream("fichero");
 				JSONObject fileReturn = new JSONObject(IOUtils.toString(is, StandardCharsets.UTF_8));
 				
-				result = new RutaVO(fileReturn, 
+				result = new RutaVO(fileReturn.toMap(), 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
 								null, null, null)));
 				result.setId(ruta.getId());
@@ -134,7 +134,7 @@ public class RutaDAO {
 				InputStream is = rs.getBinaryStream("fichero");
 				JSONObject fileReturn = new JSONObject(IOUtils.toString(is, StandardCharsets.UTF_8));
 				
-				RutaVO rutaVO = new RutaVO(fileReturn, 
+				RutaVO rutaVO = new RutaVO(fileReturn.toMap(), 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
 								null, null, null)));
 				rutaVO.setId(rs.getInt("id"));
@@ -172,7 +172,7 @@ public class RutaDAO {
 				InputStream is = rs.getBinaryStream("fichero");
 				JSONObject fileReturn = new JSONObject(IOUtils.toString(is, StandardCharsets.UTF_8));
 				
-				RutaVO rutaVO = new RutaVO(fileReturn, 
+				RutaVO rutaVO = new RutaVO(fileReturn.toMap(), 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
 								null, null, null)));
 				rutaVO.setId(rs.getInt("id"));
@@ -209,7 +209,7 @@ public class RutaDAO {
 
 			ps.setInt(1, ruta.getId());
 			
-			ps.setBinaryStream(2, new ByteArrayInputStream(ruta.getFichero().toString().getBytes()));
+			ps.setBinaryStream(2, new ByteArrayInputStream(new JSONObject(ruta.getFichero()).toString().getBytes()));
 			
 			// Agregar a la consulta el email del usuario de la ruta
 			ps.setString(3, ruta.getUsuario().getEmail());
@@ -237,7 +237,7 @@ public class RutaDAO {
 			Connection conn = ConnectionManager.getConnection();
 			PreparedStatement ps = conn.prepareStatement(SQL_UPDATE);
 			
-			ps.setBinaryStream(1, new ByteArrayInputStream(ruta.getFichero().toString().getBytes()));
+			ps.setBinaryStream(1, new ByteArrayInputStream(new JSONObject(ruta.getFichero()).toString().getBytes()));
 			
 			// Agregar a la consulta el email del usuario de la ruta
 			ps.setString(2, ruta.getUsuario().getEmail());

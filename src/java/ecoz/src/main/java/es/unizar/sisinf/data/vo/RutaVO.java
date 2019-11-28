@@ -9,6 +9,8 @@
 
 package es.unizar.sisinf.data.vo;
 
+import java.util.Map;
+
 import org.json.JSONObject;
 
 public class RutaVO {
@@ -19,9 +21,9 @@ public class RutaVO {
 	private Integer id;
 	
 	/**
-	 * @property fichero: Fichero JSON donde se guarda la ruta
+	 * @property fichero: Fichero JSON en forma de mapa donde se guarda la ruta
 	 */
-	private JSONObject fichero;
+	private Map<String,Object> fichero;
 	
 	/**
 	 * @property usuario: Usuario al que pertenece la ruta
@@ -33,10 +35,22 @@ public class RutaVO {
 	 * @param fichero
 	 * @param usuario
 	 */
-	public RutaVO(JSONObject fichero, UsuarioVO usuario) {
+	public RutaVO(Map<String,Object> fichero, UsuarioVO usuario) {
 		super();
 		this.id = null;
 		this.fichero = fichero;
+		this.usuario = usuario;
+	}
+
+	/**
+	 * constructor que permite crear objetos RUTA a partir de un fichero y un usuario
+	 * @param fichero
+	 * @param usuario
+	 */
+	public RutaVO(JSONObject fichero, UsuarioVO usuario) {
+		super();
+		this.id = null;
+		this.fichero = fichero.toMap();
 		this.usuario = usuario;
 	}
 	
@@ -63,11 +77,11 @@ public class RutaVO {
 		this.id = id;
 	}
 
-	public JSONObject getFichero() {
+	public Map<String,Object> getFichero() {
 		return fichero;
 	}
 
-	public void setFichero(JSONObject fichero) {
+	public void setFichero(Map<String,Object> fichero) {
 		this.fichero = fichero;
 	}
 

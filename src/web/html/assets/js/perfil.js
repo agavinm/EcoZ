@@ -7,6 +7,11 @@
  * @coms	Sistemas de información - Práctica 3
  */
 
+
+var rutas, zonas;
+var rutaSeleccionada;
+var ultimoIndiceRuta;
+
 // Carga usuario de las cookies y si no hay, vuelve a la pantalla de inicio
 $(document).ready(function() {
   if (_usuarioVO) {
@@ -17,8 +22,123 @@ $(document).ready(function() {
     if (_usuarioVO.apellidos) {
       document.getElementById("modificar-apellidos").value = _usuarioVO.apellidos;
     }
+    
+    $.ajax({
+      type: "GET",  
+      url: "/ecoz/devolverZonas",
+      success: function(zonaVOList) {
+        if (zonaVOList.hasOwnProperty('error')) {
+          alert(zonaVOList.error);
+        }
+        else {
+          // Guardar zonas como JSON serializado
+          zonas = zonaVOList;
+          
+          $.ajax({
+            type: "GET",  
+            url: "/ecoz/devolverRutas",
+            data: {email: _usuarioVO.email, contrasena: _usuarioVO.contrasena},
+            success: function(rutaVOList) {
+              if (rutaVOList.hasOwnProperty('error')) {
+                alert(rutaVOList.error);
+              }
+              else {
+                rutas = rutaVOList;
+                
+                if (rutas.length == 1) {
+                  cargarRuta(rutas[0], 1);
+                }
+                else if (rutas.length == 2) {
+                  cargarRuta(rutas[0], 1);
+                  cargarRuta(rutas[1], 2);
+                }
+                else if (rutas.length > 2) {
+                  cargarRuta(rutas[0], 1);
+                  cargarRuta(rutas[1], 2);
+                  document.getElementById("flechas").style.display = "block";
+                  ultimoIndiceRuta = 1;
+                }
+              }
+            },
+            
+            error: function(){  
+              alert('Error: No se ha podido establecer la conexión.');
+            }
+          });
+        }
+      },
+      
+      error: function(){  
+        alert('Error: No se ha podido establecer la conexión.');
+      }
+    });
   }
 });
+
+// Mostrar la información de la ruta numRuta
+function cargarRuta(ruta, numRuta) {
+  $.ajax({
+    type: "GET",  
+    url: "/ecoz/discurrePor",
+    data: {rutaId: ruta.id},
+    success: function(discurreVOList) {
+      if (discurreVOList.hasOwnProperty('error')) {
+        alert(discurreVOList.error);
+      }
+      else {
+        var contaminacion = 0;
+        for (var z = 0; z < zonas.length; z++) {
+          for (var z_r = 0; z_r < discurreVOList.length; z_r++) {
+            if (discurreVOList[z_r].zona.nombre == zonas[z].nombre) {
+              contaminacion = contaminacion + zonas[z].co2;
+            }
+          }
+        }
+      
+        if (numRuta == 1) {
+          document.getElementById("ruta1").style.display = "block";
+          document.getElementById("rutaNombre1").innerHTML = "Ruta ".concat((ultimoIndiceRuta).toString());
+          document.getElementById("origen1").innerHTML = "Origen:<br>".concat(ruta.fichero.routes[0].legs[0].start_address);
+          document.getElementById("destino1").innerHTML = "Destino:<br>".concat(ruta.fichero.routes[0].legs[0].end_address);
+          document.getElementById("distancia1").innerHTML = "Distancia total:<br>".concat(ruta.fichero.routes[0].legs[0].distance.text);
+          document.getElementById("tiempo1").innerHTML = "Tiempo de recorrido:<br>".concat(ruta.fichero.routes[0].legs[0].duration.text);
+          document.getElementById("contaminacion1").innerHTML = contaminacion.toFixed(2);
+        }
+        else if (numRuta == 2) {
+          document.getElementById("ruta2").style.display = "block";
+          document.getElementById("rutaNombre2").innerHTML = "Ruta ".concat((ultimoIndiceRuta+1).toString());
+          document.getElementById("origen2").innerHTML = "Origen:<br>".concat(ruta.fichero.routes[0].legs[0].start_address);
+          document.getElementById("destino2").innerHTML = "Destino:<br>".concat(ruta.fichero.routes[0].legs[0].end_address);
+          document.getElementById("distancia2").innerHTML = "Distancia total:<br>".concat(ruta.fichero.routes[0].legs[0].distance.text);
+          document.getElementById("tiempo2").innerHTML = "Tiempo de recorrido:<br>".concat(ruta.fichero.routes[0].legs[0].duration.text);
+          document.getElementById("contaminacion2").innerHTML = contaminacion.toFixed(2);
+        }
+      }
+    },
+      
+    error: function(){  
+      alert('Error: No se ha podido establecer la conexión.');
+    }
+  });
+}
+
+// Retrocede en las rutas mostradas
+function retrocederRutas() {
+  if (ultimoIndiceRuta > 1) {
+    ultimoIndiceRuta = ultimoIndiceRuta - 1;
+    cargarRuta(rutas[ultimoIndiceRuta], 2);
+    cargarRuta(rutas[ultimoIndiceRuta-1], 1);
+  }
+}
+
+// Retrocede en las rutas mostradas
+function avanzarRutas() {
+  if (ultimoIndiceRuta < rutas.length-1) {
+    ultimoIndiceRuta = ultimoIndiceRuta + 1;
+    cargarRuta(rutas[ultimoIndiceRuta], 2);
+    cargarRuta(rutas[ultimoIndiceRuta-1], 1);
+  }
+}
 
 // Función de modificar la información del usuario
 function modificarUsuario() {

@@ -53,37 +53,17 @@
         </div>
         <div class="col">
             <h4 style="color: #d80505;">Historial de rutas</h4>
-            <div class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);">
-                <h3 class="text-center" style="color: #d80505;">Ruta 1</h3>
+            <div id="ruta1" class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);display: none">
+                <h3 id="rutaNombre1" class="text-center" style="color: #d80505;"></h3>
                 <div class="row">
                     <div class="col col-7">
-                        <p style="padding-left: 10px;">Origen:<br>Campus Río Ebro</p>
-                        <p style="padding-left: 10px;">Destino:<br>La Romareda</p>
-                        <p style="padding-left: 10px;">Distancia total:<br>10km</p>
-                        <p style="padding-left: 10px;">Tiempo de recorrido:<br>1h</p>
-                        <p style="padding-left: 10px;">Fecha:<br>15/10/2019</p>
+                        <p id="origen1" style="padding-left: 10px;">Origen:<br></p>
+                        <p id="destino1" style="padding-left: 10px;">Destino:<br></p>
+                        <p id="distancia1" style="padding-left: 10px;">Distancia total:<br></p>
+                        <p id="tiempo1" style="padding-left: 10px;">Tiempo de recorrido:<br></p>
                     </div>
                     <div class="col">
-                        <h3 class="display-4 text-center" style="color: #d80505;font-size: 36px;">54%</h3>
-                        <p class="text-center" style="font-size: 12px;">Contaminación</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Cargar</button></div>
-                </div>
-            </div>
-            <div class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);margin-top: 10px;margin-bottom: 15px;">
-                <h3 class="text-center" style="color: #d80505;">Ruta 2</h3>
-                <div class="row">
-                    <div class="col col-7">
-                        <p style="padding-left: 10px;">Origen:<br>Campus Río Ebro</p>
-                        <p style="padding-left: 10px;">Destino:<br>Cadrete</p>
-                        <p style="padding-left: 10px;">Distancia total:<br>30km</p>
-                        <p style="padding-left: 10px;">Tiempo de recorrido:<br>2h 1m</p>
-                        <p style="padding-left: 10px;margin-bottom: 0px;">Fecha:<br>10/10/2019</p>
-                    </div>
-                    <div class="col">
-                        <h3 class="display-4 text-center" style="color: #d80505;font-size: 36px;">33%</h3>
+                        <h3 id="contaminacion1" class="display-4 text-center" style="color: #d80505;font-size: 36px;"></h3>
                         <p class="text-center" style="color: #d80505;font-size: 12px;">Contaminación</p>
                     </div>
                 </div>
@@ -91,6 +71,52 @@
                     <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Cargar</button></div>
                 </div>
             </div>
+            <div id="ruta2" class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);margin-top: 10px;margin-bottom: 15px;display: none">
+                <h3 id="rutaNombre2" class="text-center" style="color: #d80505;"></h3>
+                <div class="row">
+                    <div class="col col-7">
+                        <p id="origen2" style="padding-left: 10px;">Origen:<br></p>
+                        <p id="destino2" style="padding-left: 10px;">Destino:<br></p>
+                        <p id="distancia2" style="padding-left: 10px;">Distancia total:<br></p>
+                        <p id="tiempo2" style="padding-left: 10px;">Tiempo de recorrido:<br></p>
+                    </div>
+                    <div class="col">
+                        <h3 id="contaminacion2" class="display-4 text-center" style="color: #d80505;font-size: 36px;"></h3>
+                        <p class="text-center" style="color: #d80505;font-size: 12px;">Contaminación</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-center"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Cargar</button></div>
+                </div>
+            </div>
+        </div>
+        <div id="flechas" class="col-md-1" style="display: none">
+            <button id="flecha1" type="button" style="background-color: #d80505;margin-top: 20px;margin-bottom: 20px;" class="btn btn-primary d-xl-flex" onclick="retrocederRutas()">
+                <div class="content">
+                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="15" height="15" viewBox="0 0 255 255">
+                        <g>
+                            <g id="arrow-drop-up">
+                                <polygon points="0,191.25 127.5,63.75 255,191.25   "></polygon>
+                            </g>
+                        </g>
+                        <g>
+                        </g>
+                    </svg>
+                </div>
+            </button>
+            <button id="flecha2" type="button" style="background-color: #d80505;" class="btn btn-primary d-xl-flex" onclick="avanzarRutas()">
+                <div class="content">
+                    <svg version="1.1" id="Capa_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="15" height="15" viewBox="0 0 255 255">
+                        <g>
+                            <g id="arrow-drop-down">
+                                <polygon points="0,63.75 127.5,191.25 255,63.75 		"></polygon>
+                            </g>
+                        </g>
+                        <g>
+                        </g>
+                    </svg>
+                </div>
+            </button>
         </div>
     </div>
     </div>

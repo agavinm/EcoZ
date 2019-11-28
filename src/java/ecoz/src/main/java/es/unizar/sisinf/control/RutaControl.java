@@ -50,7 +50,7 @@ public class RutaControl {
 		try {
 			UsuarioVO usuarioVO = usuarioDAO.findById(new UsuarioVO(email, null, null, contrasena));
 			if (usuarioVO.getContrasena().equals(contrasena)) {
-				RutaVO rutaVO = new RutaVO(fichero, usuarioVO);
+				RutaVO rutaVO = new RutaVO(fichero.toMap(), usuarioVO);
 				rutaDAO.create(rutaVO);
 				return rutaVO;
 			}
