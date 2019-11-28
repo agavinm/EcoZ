@@ -11,8 +11,12 @@ package es.unizar.sisinf.data;
 
 import es.unizar.sisinf.data.dao.*;
 import es.unizar.sisinf.data.vo.*;
+
 import java.io.File;
 import java.util.ArrayList;
+
+import org.json.JSONObject;
+
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 
 public class PruebasData {
@@ -63,9 +67,9 @@ public class PruebasData {
 
 		ArrayList<UsuarioVO> usuarios = u.findAll();
 		
-		r.create(new RutaVO(new Kml(), usuarios.get(0)));
-		r.create(new RutaVO(new Kml(), usuarios.get(0)));
-		RutaVO rutaVO = new RutaVO(new Kml(), usuarios.get(0));
+		r.create(new RutaVO(new JSONObject(), usuarios.get(0)));
+		r.create(new RutaVO(new JSONObject(), usuarios.get(0)));
+		RutaVO rutaVO = new RutaVO(new JSONObject(), usuarios.get(0));
 		r.create(rutaVO);
 		System.out.println(r.findById(rutaVO));
 		rutaVO.setUsuario(usuarios.get(usuarios.size()-1));

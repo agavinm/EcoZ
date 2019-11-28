@@ -9,7 +9,7 @@
 
 package es.unizar.sisinf.data.vo;
 
-import de.micromata.opengis.kml.v_2_2_0.Kml;
+import org.json.JSONObject;
 
 public class RutaVO {
 	
@@ -19,9 +19,9 @@ public class RutaVO {
 	private Integer id;
 	
 	/**
-	 * @property fichero: Fichero KML donde se guarda la ruta
+	 * @property fichero: Fichero JSON donde se guarda la ruta
 	 */
-	private Kml fichero;
+	private JSONObject fichero;
 	
 	/**
 	 * @property usuario: Usuario al que pertenece la ruta
@@ -33,7 +33,7 @@ public class RutaVO {
 	 * @param fichero
 	 * @param usuario
 	 */
-	public RutaVO(Kml fichero, UsuarioVO usuario) {
+	public RutaVO(JSONObject fichero, UsuarioVO usuario) {
 		super();
 		this.id = null;
 		this.fichero = fichero;
@@ -63,11 +63,11 @@ public class RutaVO {
 		this.id = id;
 	}
 
-	public Kml getFichero() {
+	public JSONObject getFichero() {
 		return fichero;
 	}
 
-	public void setFichero(Kml fichero) {
+	public void setFichero(JSONObject fichero) {
 		this.fichero = fichero;
 	}
 

@@ -19,12 +19,11 @@ import java.util.ArrayList;
 
 import javax.ws.rs.Produces;
 
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import de.micromata.opengis.kml.v_2_2_0.Kml;
 
 @RestController
 @Api(value="User Management System", description="Operations pertaining to user in User Managament System ")
@@ -44,7 +43,7 @@ public class RutaControl {
 	@CrossOrigin
 	@RequestMapping("/registrarRuta")
 	@Produces("application/json")
-    public Object registrarRuta(@ApiParam("fichero") @RequestParam("fichero") Kml fichero,
+    public Object registrarRuta(@ApiParam("fichero") @RequestParam("fichero") JSONObject fichero,
     		@ApiParam("email") @RequestParam("email") String email,
     		@ApiParam("contrasena") @RequestParam("contrasena") String contrasena) {
 		

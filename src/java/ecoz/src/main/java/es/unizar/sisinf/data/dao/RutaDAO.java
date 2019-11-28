@@ -14,13 +14,12 @@ import es.unizar.sisinf.data.db.ConnectionManager;
 import es.unizar.sisinf.data.exception.DataException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import org.apache.commons.io.FileUtils;
-import de.micromata.opengis.kml.v_2_2_0.Kml;
+import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 
 public class RutaDAO {
 	
@@ -89,17 +88,7 @@ public class RutaDAO {
 			// Leer resultados			
 			if (rs.next()) {
 				InputStream is = rs.getBinaryStream("fichero");
-				int x = (int) ((Math.random()*((100-999)+1))+100);
-				String fileName = "tmp" + x + ".txt";
-				try {
-					FileUtils.copyInputStreamToFile(is, new File(fileName));
-				} 
-				catch (IOException e) {
-					throw new DataException(DataException.EX_ZONARUTA);
-				}
-				File file = new File(fileName);
-				Kml fileReturn = Kml.unmarshal(file);
-				file.delete();
+				JSONObject fileReturn = new JSONObject(IOUtils.toString(is, StandardCharsets.UTF_8));
 				
 				result = new RutaVO(fileReturn, 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
@@ -111,7 +100,7 @@ public class RutaDAO {
 			}
 			ConnectionManager.releaseConnection(conn);
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			throw new DataException(EX_NOEXISTE);
 		}
 		
@@ -143,17 +132,7 @@ public class RutaDAO {
 			// Leer resultados			
 			while(rs.next()) {
 				InputStream is = rs.getBinaryStream("fichero");
-				int x = (int) ((Math.random()*((100-999)+1))+100);
-				String fileName = "tmp" + x + ".txt";
-				try {
-					FileUtils.copyInputStreamToFile(is, new File(fileName));
-				} 
-				catch (IOException e) {
-					throw new DataException(DataException.EX_ZONARUTA);
-				}
-				File file = new File(fileName);
-				Kml fileReturn = Kml.unmarshal(file);
-				file.delete();
+				JSONObject fileReturn = new JSONObject(IOUtils.toString(is, StandardCharsets.UTF_8));
 				
 				RutaVO rutaVO = new RutaVO(fileReturn, 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
@@ -163,7 +142,7 @@ public class RutaDAO {
 			}
 			ConnectionManager.releaseConnection(conn);
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			throw new DataException(DataException.EX_CONEXION);
 		}
 		
@@ -191,17 +170,7 @@ public class RutaDAO {
 			// Leer resultados			
 			while(rs.next()) {
 				InputStream is = rs.getBinaryStream("fichero");
-				int x = (int) ((Math.random()*((100-999)+1))+100);
-				String fileName = "tmp" + x + ".txt";
-				try {
-					FileUtils.copyInputStreamToFile(is, new File(fileName));
-				} 
-				catch (IOException e) {
-					throw new DataException(DataException.EX_ZONARUTA);
-				}
-				File file = new File(fileName);
-				Kml fileReturn = Kml.unmarshal(file);
-				file.delete();
+				JSONObject fileReturn = new JSONObject(IOUtils.toString(is, StandardCharsets.UTF_8));
 				
 				RutaVO rutaVO = new RutaVO(fileReturn, 
 						usuarioDAO.findById(new UsuarioVO(rs.getString("usuario_email"), 
@@ -211,7 +180,7 @@ public class RutaDAO {
 			}
 			ConnectionManager.releaseConnection(conn);
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			throw new DataException(DataException.EX_CONEXION);
 		}
 		
@@ -239,30 +208,8 @@ public class RutaDAO {
 			}
 
 			ps.setInt(1, ruta.getId());
-		
-			// Agregar el fichero kml de la ruta a la consulta
-			// Primero hay que volcar el contenido del fichero kml a un txt
-			// Debido a la implementación de la librería externa usada, se genera un txt en la carpeta del proyecto
-			int x = (int) ((Math.random()*((100-999)+1))+100);
-			String fileName = "tmp" + x + ".txt";
-			try {
-				ruta.getFichero().marshal(new File(fileName));
-			} 
-			catch (FileNotFoundException e) {
-				throw new DataException(DataException.EX_RUTA);
-			}
-			// Se vuelve a abrir el txt generado
-			File file = new File(fileName);
-			InputStream is = null;
-			try {
-				is = (InputStream) new FileInputStream(file);
-			} 
-			catch (FileNotFoundException e2) {
-				throw new DataException(DataException.EX_RUTA);
-			}
-			ps.setBinaryStream(2, is, (int) file.length());
-			// Se borra el txt generado
-			file.delete();
+			
+			ps.setBinaryStream(2, new ByteArrayInputStream(ruta.getFichero().toString().getBytes()));
 			
 			// Agregar a la consulta el email del usuario de la ruta
 			ps.setString(3, ruta.getUsuario().getEmail());
@@ -289,30 +236,8 @@ public class RutaDAO {
 			// Abrir conexión e inicializar los parámetros
 			Connection conn = ConnectionManager.getConnection();
 			PreparedStatement ps = conn.prepareStatement(SQL_UPDATE);
-		
-			// Agregar el fichero kml de la ruta a la consulta
-			// Primero hay que volcar el contenido del fichero kml a un txt
-			// Debido a la implementación de la librería externa usada, se genera un txt en la carpeta del proyecto
-			int x = (int) ((Math.random()*((100-999)+1))+100);
-			String fileName = "tmp" + x + ".txt";
-			try {
-				ruta.getFichero().marshal(new File(fileName));
-			} 
-			catch (FileNotFoundException e) {
-				throw new DataException(DataException.EX_RUTA);
-			}
-			// Se vuelve a abrir el txt generado
-			File file = new File(fileName);
-			InputStream is = null;
-			try {
-				is = (InputStream) new FileInputStream(file);
-			} 
-			catch (FileNotFoundException e2) {
-				throw new DataException(DataException.EX_RUTA);
-			}
-			ps.setBinaryStream(1, is, (int) file.length());
-			// Se borra el txt generado
-			file.delete();
+			
+			ps.setBinaryStream(1, new ByteArrayInputStream(ruta.getFichero().toString().getBytes()));
 			
 			// Agregar a la consulta el email del usuario de la ruta
 			ps.setString(2, ruta.getUsuario().getEmail());

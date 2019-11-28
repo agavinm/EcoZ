@@ -209,6 +209,11 @@ function initMap() {
                 var pollution1 = 0;
                 points1 = result.routes[0].overview_path;
                 discurrePor(points1,1);
+                
+                rutasInfo[0] = JSON.parse(JSON.stringify(result)); // Cloning without reference
+                rutasInfo[0].routes = [];
+                rutasInfo[0].routes.push(result.routes[0]);
+                
                 var zones1 = zonesOfRoute[0];
                 for (var l in zones1) {
                   pollution1 = pollution1 + zones1[l].co2;
@@ -222,6 +227,11 @@ function initMap() {
                 var pollution2 = 0;
                 points2 = result.routes[1].overview_path;
                 discurrePor(points2,2);
+                
+                rutasInfo[1] = JSON.parse(JSON.stringify(result)); // Cloning without reference
+                rutasInfo[1].routes = [];
+                rutasInfo[1].routes.push(result.routes[1]);
+                
                 var zones2 = zonesOfRoute[1];
                 for (var m in zones2) {
                   pollution2 = pollution2 + zones2[m].co2;
@@ -235,6 +245,11 @@ function initMap() {
                 var pollution3 = 0;
                 points3 = result.routes[2].overview_path;
                 discurrePor(points3,3);
+                
+                rutasInfo[2] = JSON.parse(JSON.stringify(result)); // Cloning without reference
+                rutasInfo[2].routes = [];
+                rutasInfo[2].routes.push(result.routes[2]);
+                
                 var zones3 = zonesOfRoute[2];
                 for (var n in zones3) {
                   pollution3 = pollution3 + zones3[n].co2;
@@ -311,8 +326,6 @@ function initMap() {
     p1.innerHTML = pollution.toFixed(2);
     r1.addEventListener('mouseover',highlight1);
     r1.addEventListener('mouseleave',displayAll);
-    
-    rutasInfo[0] = zonasInfo[0].fichero; // TODO hacer bien
   }
   
   // Mostrar la información de la ruta2
@@ -350,7 +363,7 @@ function initMap() {
 
 function guardarDiscurre(rutaVO, zonasVOList) {
   var error = false;
-  for (var i = 0; z < zonasVOList.length && !error; z++) {
+  for (var i = 0; i < zonasVOList.length && !error; i++) {
     $.ajax({
       type: "GET",  
       url: "/ecoz/registrarDiscurre",
@@ -377,7 +390,7 @@ function guardarRuta(numRuta) {
   $.ajax({
     type: "GET",  
     url: "/ecoz/registrarRuta",
-    data: {fichero: JSON.stringify(rutasInfo[numRuta-1]), email: _usuarioVO.email, contrasena: md5(_usuarioVO.contrasena).substr(0, 10)},
+    data: {fichero: JSON.stringify(rutasInfo[numRuta-1]), email: _usuarioVO.email, contrasena: _usuarioVO.contrasena},
     success: function(rutaVO) {
       if (rutaVO.hasOwnProperty('error')) {
         alert(rutaVO.error);
