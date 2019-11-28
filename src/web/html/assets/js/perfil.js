@@ -9,7 +9,6 @@
 
 
 var rutas, zonas;
-var rutaSeleccionada;
 var ultimoIndiceRuta;
 
 // Carga usuario de las cookies y si no hay, vuelve a la pantalla de inicio
@@ -47,10 +46,12 @@ $(document).ready(function() {
                 
                 if (rutas.length == 1) {
                   cargarRuta(rutas[0], 1);
+                  ultimoIndiceRuta = 0;
                 }
                 else if (rutas.length == 2) {
                   cargarRuta(rutas[0], 1);
                   cargarRuta(rutas[1], 2);
+                  ultimoIndiceRuta = 1;
                 }
                 else if (rutas.length > 2) {
                   cargarRuta(rutas[0], 1);
@@ -138,6 +139,22 @@ function avanzarRutas() {
     cargarRuta(rutas[ultimoIndiceRuta], 2);
     cargarRuta(rutas[ultimoIndiceRuta-1], 1);
   }
+}
+
+// Muestra la ruta en el mapa
+function mostrarRuta(numRuta) {
+  if (numRuta == 1) {
+    if (ultimoIndiceRuta == 0) {
+      localStorage['rutaSeleccionada'] = JSON.stringify(rutas[ultimoIndiceRuta]);
+    }
+    else {
+      localStorage['rutaSeleccionada'] = JSON.stringify(rutas[ultimoIndiceRuta-1]);
+    }
+  }
+  else if (numRuta == 2) {
+    localStorage['rutaSeleccionada'] = JSON.stringify(rutas[ultimoIndiceRuta]);
+  }
+  window.location.replace("/ecoz/ruta.html");
 }
 
 // Función de modificar la información del usuario

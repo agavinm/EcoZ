@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>ecoz</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+       /* Set the size of the div element that contains the map */
+        #map {
+        height: 80%;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+        }
+    </style>
+</head>
+
+<body style="background-repeat: no-repeat;">
+    <nav class="navbar navbar-light navbar-expand-lg bg-white page-navbar" style="background-repeat: no-repeat;background-position: 200% 0%;background-color: #d80505;">
+        <div class="container"><a class="navbar-brand" href="#" style="filter: blur(0px);color: #d80505;">Calculadora de rutas limpias</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div
+                class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item item" role="presentation"><a class="nav-link active" href="perfil.html" style="color: #d80505;">Perfil</a></li>
+                    <li class="nav-item item" role="presentation"><a class="nav-link" href="ayuda.html" style="color: #d80505;">Ayuda</a></li>
+                    <li class="nav-item item" role="presentation"><a class="nav-link" href="index.html" style="color: #d80505;">Salir</a></li>
+                </ul>
+        </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="map-example">
+            <div class="row" style="height: 700px;">
+                <div class="col-lg-6 col-lg-7 text-center">
+                    <h2 class="text-left" style="color: #d80505;">Mapa de la ruta</h2>
+                    <div id="map"></div>
+                    <div class="btn-group d-xl-flex" role="group"><button class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;" onclick="regresar()">Calcular nueva ruta</button></div>
+                </div>
+                <div class="col">
+                    <h2 style="color: #d80505;">Ruta guardada</h2><a class="text-center forgot" href="perfil.html" style="color: #d80505;">&nbsp;Consultar historial de rutas</a>
+                    <div id="route1" class="border rounded border-primary" style="background-color: #e4e1e1;filter: blur(0px) invert(0%);display: block">
+                        <h3 class="text-center" style="color: #d80505;">Información</h3>
+                        <div class="row">
+                            <div class="col col-7">
+                                <p id="distance1" style="padding-left: 10px;">Distancia total:<br></p>
+                                <p id="time1" style="padding-left: 10px;">Tiempo de recorrido:<br></p>
+                            </div>
+                            <div class="col">
+                                <h3 id="pollution1" class="display-4 text-center" style="color: #d80505;"></h3>
+                                <p class="text-center" style="color: #d80505;">Contaminación</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center"><button id ="delete" class="btn btn-primary d-xl-flex" type="button" style="background-color: #d80505;margin: auto;">Eliminar</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col">
+                    <h2 style="color: #d80505;">Niveles de contaminación</h2>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="color: #d80505;">CO2</th>
+                                    <th class="text-center" style="color: #d80505;">PM10</th>
+                                    <th class="text-center" style="color: #d80505;">O3</th>
+                                    <th class="text-center" style="color: #d80505;">NO2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="co2-media" class="text-center">&nbsp;2.05 ug/m3</td>
+                                    <td id="pm10-media" class="text-center">7.02 ug/m3</td>
+                                    <td id="o3-media" class="text-center">7.7 ug/m3</td>
+                                    <td id="no2-media" class="text-center">43.83 ug/m3</td>
+                                </tr>
+                                <tr></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/ruta.js"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgXesNvhENa2zrC83lv9howWy0I02lWgg&callback=initMapRoute">
+    </script>
+</body>
+
+</html>
