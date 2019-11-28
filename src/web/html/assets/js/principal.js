@@ -206,40 +206,40 @@ function initMap() {
                         directionsRenderer[i].setMap(map);
                         var data;
                         if (i == 0) {
-                            var pollution1;
+                            var pollution1= 0;
                             points1 = result.routes[0].overview_path;
                             discurrePor(points1,1);
                             var zones1 = zonesOfRoute[0];
                             for (var l in zones1) {
-                                pollution1 = pollution1 + zonasInfo.zones1[l].c02;
+                                pollution1 = pollution1 + parseInt(zonasInfo.zones1[l].c02,10);
                             }
-                            pollution1 = pollution1 / zones1.length;
+                            if (zones1.length != 0) { pollution1 = pollution1 / zones1.length; }
                             data = result.routes[0].legs[0];
                             loadRoute1(data.distance.text,data.duration.text,pollution1);
                             ++numRutas;
                         }
                         else if (i == 1) {
-                            var pollution2;
+                            var pollution2 = 0;
                             points2 = result.routes[1].overview_path;
                             discurrePor(points2,2);
                             var zones2 = zonesOfRoute[1];
                             for (var m in zones2) {
-                                pollution2 = pollution2 + zonasInfo.zones2[m].c02;
+                                pollution2 = pollution2 + parseInt(zonasInfo.zones2[m].c02,10);
                             }
-                            pollution2 = pollution2 / zones2.length;
+                            if (zones2.length != 0) { pollution2 = pollution2 / zones2.length; }
                             data = result.routes[1].legs[0];
                             loadRoute2(data.distance.text,data.duration.text,pollution2);
                             ++numRutas;
                         }
                         else if (i == 2) {
-                            var pollution3;
+                            var pollution3 = 0;
                             points3 = result.routes[2].overview_path;
                             discurrePor(points3,3);
                             var zones3 = zonesOfRoute[2];
                             for (var n in zones3) {
-                                pollution3 = pollution3 + zonasInfo.zones3[n].c02;
+                                pollution3 = pollution3 + parseInt(zonasInfo.zones3[n].c02,10);
                             }
-                            pollution3 = pollution3 / zones3.length;
+                            if (zones3.length != 0) { pollution3 = pollution3 / zones3.length; }
                             data = result.routes[2].legs[0];
                             loadRoute3(data.distance.text,data.duration.text,pollution3);
                             ++numRutas;
