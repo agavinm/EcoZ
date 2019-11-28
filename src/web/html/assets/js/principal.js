@@ -32,10 +32,10 @@ $(document).ready(function() {
             no2 = no2 + zonasInfo.counters[i].no2;
           }
           
-          document.getElementById("co2-media").value = co2 / zonasInfo.counters.length;
-          document.getElementById("pm10-media").value = pm10 / zonasInfo.counters.length;
-          document.getElementById("o3-media").value = o3 / zonasInfo.counters.length;
-          document.getElementById("no2-media").value = no2 / zonasInfo.counters.length;
+          document.getElementById("co2-media").innerHTML = co2 / zonasInfo.counters.length;
+          document.getElementById("pm10-media").innerHTML = pm10 / zonasInfo.counters.length;
+          document.getElementById("o3-media").innerHTML = o3 / zonasInfo.counters.length;
+          document.getElementById("no2-media").innerHTML = no2 / zonasInfo.counters.length;
           
         }
       },
