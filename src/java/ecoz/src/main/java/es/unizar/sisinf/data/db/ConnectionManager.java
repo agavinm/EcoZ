@@ -17,8 +17,8 @@ public class ConnectionManager {
 	
 	// JDBC
 	private static final String JDBC_DRIVER = "org.postgresql.Driver";
-	private static final String DB_URL = "jdbc:postgresql://localhost:5432/sisinf";
-	//private static final String DB_URL = "jdbc:postgresql://sisinf-postgresql:5432/sisinf";
+	//private static final String DB_URL = "jdbc:postgresql://localhost:5432/sisinf";
+	private static final String DB_URL = "jdbc:postgresql://sisinf-postgresql:5432/sisinf";
 	
 	// Credenciales
 	private static final String USER = "sisinf";

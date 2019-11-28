@@ -40,7 +40,7 @@ function modificarUsuario() {
         }
         else {
           // Guardar usuario como JSON serializado
-          _usuarioVO = JSON.stringify(usuarioVO);
+          _usuarioVO = usuarioVO;
           localStorage['usuario'] = _usuarioVO;
           alert('Usuario actualizado.');
           window.location.reload();
@@ -75,7 +75,7 @@ function modificarPassword() {
         }
         else {
           // Guardar usuario como JSON serializado
-          _usuarioVO = JSON.stringify(usuarioVO);
+          _usuarioVO = usuarioVO;
           localStorage['usuario'] = _usuarioVO;
           alert('Contraseña actualizada.');
           window.location.reload();

@@ -14,28 +14,25 @@ $(document).ready(function() {
   
   $.ajax({
       type: "GET",  
-      url: "/ecoz/devolverzonasInfo",
+      url: "/ecoz/devolverZonas",
       success: function(zonaVOList) {
         if (zonaVOList.hasOwnProperty('error')) {
           alert(zonaVOList.error);
         }
         else {
           // Guardar zonasInfo como JSON serializado
-          zonasInfo = JSON.stringify(zonaVOList);
-          for (var i = 0; i < zonasInfo.counters.length; i++) {
-            zonasInfo.counters[i] = JSON.stringify(zonasInfo.counters[i]);
-            
-            // Datos totales
-            co2 = co2 + zonasInfo.counters[i].co2;
-            pm10 = pm10 + zonasInfo.counters[i].pm10;
-            o3 = o3 + zonasInfo.counters[i].o3;
-            no2 = no2 + zonasInfo.counters[i].no2;
+          zonasInfo = zonaVOList;
+          for (var i = 0; i < zonasInfo.length; i++) {
+            co2 = co2 + zonasInfo[i].co2;
+            pm10 = pm10 + zonasInfo[i].pm10;
+            o3 = o3 + zonasInfo[i].o3;
+            no2 = no2 + zonasInfo[i].no2;
           }
           
-          document.getElementById("co2-media").innerHTML = co2 / zonasInfo.counters.length;
-          document.getElementById("pm10-media").innerHTML = pm10 / zonasInfo.counters.length;
-          document.getElementById("o3-media").innerHTML = o3 / zonasInfo.counters.length;
-          document.getElementById("no2-media").innerHTML = no2 / zonasInfo.counters.length;
+          document.getElementById("co2-media").innerHTML = (co2 / zonasInfo.length).toFixed(2).concat(" ug/m3");
+          document.getElementById("pm10-media").innerHTML = (pm10 / zonasInfo.length).toFixed(2).concat(" ug/m3");
+          document.getElementById("o3-media").innerHTML = (o3 / zonasInfo.length).toFixed(2).concat(" ug/m3");
+          document.getElementById("no2-media").innerHTML = (no2 / zonasInfo.length).toFixed(2).concat(" ug/m3");
           
         }
       },
@@ -176,9 +173,8 @@ function initMap() {
         for (var k in listaPuntos) {
             for (var j = 0; j < 10; ++j) {
                 if (zone[j].contains(listaPuntos[k])) {
-                    var nuevaZona = "Zona".concat(String(j+1));
-                    if (!(zonesOfRoute[numRuta-1].includes(nuevaZona))) {
-                        zonesOfRoute[numRuta-1].push(nuevaZona);
+                    if (!(zonesOfRoute[numRuta-1].includes(zonasInfo[j]))) {
+                        zonesOfRoute[numRuta-1].push(zonasInfo[j]);
                     }
                 }
             }
@@ -206,12 +202,12 @@ function initMap() {
                         directionsRenderer[i].setMap(map);
                         var data;
                         if (i == 0) {
-                            var pollution1= 0;
+                            var pollution1 = 0;
                             points1 = result.routes[0].overview_path;
                             discurrePor(points1,1);
                             var zones1 = zonesOfRoute[0];
                             for (var l in zones1) {
-                                pollution1 = pollution1 + parseInt(zonasInfo.zones1[l].c02,10);
+                                pollution1 = pollution1 + zones1[l].co2;
                             }
                             if (zones1.length != 0) { pollution1 = pollution1 / zones1.length; }
                             data = result.routes[0].legs[0];
@@ -224,7 +220,7 @@ function initMap() {
                             discurrePor(points2,2);
                             var zones2 = zonesOfRoute[1];
                             for (var m in zones2) {
-                                pollution2 = pollution2 + parseInt(zonasInfo.zones2[m].c02,10);
+                                pollution2 = pollution2 + zones2[m].co2;
                             }
                             if (zones2.length != 0) { pollution2 = pollution2 / zones2.length; }
                             data = result.routes[1].legs[0];
@@ -237,7 +233,7 @@ function initMap() {
                             discurrePor(points3,3);
                             var zones3 = zonesOfRoute[2];
                             for (var n in zones3) {
-                                pollution3 = pollution3 + parseInt(zonasInfo.zones3[n].c02,10);
+                                pollution3 = pollution3 + zones3[n].co2;
                             }
                             if (zones3.length != 0) { pollution3 = pollution3 / zones3.length; }
                             data = result.routes[2].legs[0];
@@ -308,7 +304,7 @@ function initMap() {
         r1.style.display = "block";
         t1.innerHTML = "Tiempo:<br>".concat(time);
         d1.innerHTML = "Distancia:<br>".concat(distance);
-        p1.innerHTML = pollution;
+        p1.innerHTML = pollution.toFixed(2);
         r1.addEventListener('mouseover',highlight1);
         r1.addEventListener('mouseleave',displayAll);
     }
@@ -324,7 +320,7 @@ function initMap() {
         r2.style.display = "block";
         t2.innerHTML = "Tiempo:<br>".concat(time);
         d2.innerHTML = "Distancia:<br>".concat(distance);
-        p2.innerHTML = pollution;
+        p2.innerHTML = pollution.toFixed(2);
         r2.addEventListener('mouseover',highlight2);
         r2.addEventListener('mouseleave',displayAll);
     }
@@ -340,7 +336,7 @@ function initMap() {
         r3.style.display = "block";
         t3.innerHTML = "Tiempo:<br>".concat(time);
         d3.innerHTML = "Distancia:<br>".concat(distance);
-        p3.innerHTML = pollution;
+        p3.innerHTML = pollution.toFixed(2);
         r3.addEventListener('mouseover',highlight3);
         r3.addEventListener('mouseleave',displayAll);
     }
