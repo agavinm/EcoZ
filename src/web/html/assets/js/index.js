@@ -25,7 +25,7 @@ function acceder() {
         }
         else {
           // Guardar usuario como JSON serializado
-          localStorage['usuario'] = usuarioVO;
+          localStorage['usuario'] = JSON.stringify(usuarioVO);
           
           window.location.replace("/ecoz/principal.html");
         }
@@ -57,7 +57,7 @@ function registrar() {
         }
         else {
           // Guardar usuario como JSON serializado
-          localStorage['usuario'] = usuarioVO;
+          localStorage['usuario'] = JSON.stringify(usuarioVO);
           
           window.location.replace("/ecoz/principal.html");
         }
