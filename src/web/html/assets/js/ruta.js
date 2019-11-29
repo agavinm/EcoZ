@@ -94,7 +94,7 @@ function loadRoute (distance,time,pollution) {
     var p1 = document.getElementById("pollution1");
     t1.innerHTML = "Tiempo:<br>".concat(time);
     d1.innerHTML = "Distancia:<br>".concat(distance);
-    p1.innerHTML = pollution;
+    p1.innerHTML = pollution.toFixed(2);
 }
 
 

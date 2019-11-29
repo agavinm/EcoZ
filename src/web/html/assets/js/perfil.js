@@ -95,6 +95,7 @@ function cargarRuta(ruta, numRuta) {
             }
           }
         }
+        if (discurreVOList.length != 0) { contaminacion = contaminacion / discurreVOList.length; }
       
         if (numRuta == 1) {
           document.getElementById("ruta1").style.display = "block";
@@ -180,7 +181,6 @@ function modificarUsuario() {
           _usuarioVO = usuarioVO;
           localStorage['usuario'] = JSON.stringify(_usuarioVO);
           alert('Usuario actualizado.');
-          window.location.reload();
         }
       },
       
@@ -215,7 +215,6 @@ function modificarPassword() {
           _usuarioVO = usuarioVO;
           localStorage['usuario'] = JSON.stringify(_usuarioVO);
           alert('Contraseña actualizada.');
-          window.location.reload();
         }
       },
       
